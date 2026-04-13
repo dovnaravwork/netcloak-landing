@@ -210,6 +210,42 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
 .apps-links a:hover{border-color:var(--cyan)}
 .bot-promo{margin-top:20px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);text-align:center}
 .bot-promo a{display:inline-block;background:var(--accent);color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;margin-top:8px}
+
+/* OS Tabs */
+.os-tabs{display:flex;gap:4px;margin:16px 0 12px;background:var(--card);border-radius:10px;padding:3px}
+.os-tab{flex:1;text-align:center;padding:10px 4px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);transition:all .2s}
+.os-tab.active{background:rgba(6,182,212,.12);color:#fff}
+.os-content{display:none}
+.os-content.active{display:block}
+.os-step{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-size:13px;line-height:1.5}
+.os-step-num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(6,182,212,.15);color:var(--cyan);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.os-step-text{color:var(--text)}
+.os-step-text a{color:var(--cyan);text-decoration:none}
+.os-step-text b{color:#fff}
+.check-link{display:inline-block;margin-top:12px;font-size:12px;color:var(--cyan);text-decoration:none;padding:6px 14px;border:1px solid rgba(6,182,212,.2);border-radius:8px}
+
+/* Key block */
+.key-block{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
+.key-preview{font-family:'SF Mono',Consolas,monospace;font-size:11px;color:var(--muted);word-break:break-all;max-height:44px;overflow:hidden;margin-bottom:12px}
+.key-actions{display:flex;gap:8px}
+.key-actions .btn{flex:1;margin:0;font-size:14px;padding:12px}
+
+/* Status pill */
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:12px}
+.status-pill.active{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.status-pill.pending{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
+.status-pill.error{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.status-dot.pulse{animation:dot-pulse 1.5s infinite}
+@keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Expiry */
+.expiry-text{font-size:13px;color:var(--muted);margin-bottom:16px}
+
+/* Trust footer */
+.trust-footer{display:flex;flex-direction:column;gap:6px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.trust-footer-item{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.trust-footer-item span{color:#555}
 </style>
 </head>
 <body>
@@ -366,41 +402,32 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
   <!-- PAGE: Trial Success -->
   <div id="page-trial" class="hidden">
     <div class="success-card">
-      <div class="success-icon" id="trial-icon"></div>
-      <div class="success-title" id="trial-title">Триал активирован!</div>
-      <div class="success-subtitle">7 дней &middot; 5 устройств &middot; безлимит</div>
+      <div class="status-pill active"><div class="status-dot"></div>Триал активирован</div>
+      <div class="success-title">Ваш NetCloak готов к работе</div>
+      <div class="expiry-text">7 дней &middot; 5 устройств &middot; безлимит</div>
 
       <div id="trial-result">
-        <div class="sub-url-box" id="trial-sub-url"></div>
-        <div style="display:flex;gap:8px;margin:12px 0">
-          <button class="btn" style="flex:1;margin:0" onclick="copyTrialUrl()">Скопировать</button>
-          <button class="btn btn-secondary" style="flex:1;margin:0" id="btn-share-trial" onclick="shareTrialUrl()">Поделиться</button>
+        <div class="key-block">
+          <canvas id="trial-qr" style="display:block;margin:0 auto 12px;border-radius:10px;background:#fff;padding:6px" width="180" height="180"></canvas>
+          <div class="key-preview" id="trial-sub-url"></div>
+          <div class="key-actions">
+            <button class="btn" onclick="copyTrialUrl()" id="btn-copy-trial">Скопировать ключ</button>
+            <a class="btn btn-secondary" href="https://t.me/ShadowHorizon_bot" target="_blank" style="text-align:center;text-decoration:none">Открыть в Telegram</a>
+          </div>
         </div>
-        <canvas id="trial-qr" style="display:block;margin:12px auto;border-radius:12px;background:#fff;padding:8px"></canvas>
 
-        <div class="steps">
-          <p style="font-weight:600;color:#fff;margin-bottom:12px">Подключение за 2 минуты:</p>
-          <ol>
-            <li>Скачайте приложение:
-              <div class="apps-links" style="margin:8px 0">
-                <a href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank">Android — Hiddify</a>
-                <a href="https://github.com/hiddify/hiddify-app/releases" target="_blank">Android — APK</a>
-                <a href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">iOS — Streisand</a>
-                <a href="https://github.com/2dust/v2rayN/releases" target="_blank">Windows/Mac — v2rayN</a>
-              </div>
-            </li>
-            <li>Нажмите <b>Скопировать</b> выше</li>
-            <li>В приложении: <b>+</b> затем <b>Импорт из буфера</b></li>
-            <li><b>Подключиться</b> — готово</li>
-          </ol>
+        <div id="trial-onboarding"></div>
+
+        <div class="trust-footer">
+          <div class="trust-footer-item"><span>&#x1F512;</span> Нет журналов активности</div>
+          <div class="trust-footer-item"><span>&#x1F30D;</span> Юрисдикция за пределами РФ</div>
+          <div class="trust-footer-item"><span>&#x21A9;</span> Возврат в течение 7 дней — через поддержку</div>
         </div>
 
         <div class="bot-promo">
-          <p style="font-size:14px;color:#fff">Подключите бот для продления и поддержки</p>
+          <p style="font-size:14px;color:#fff">Продление и поддержка — в боте</p>
           <a href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
-          <p style="font-size:11px;color:var(--muted);margin-top:6px">Работает после подключения</p>
         </div>
-
         <button class="btn btn-secondary" style="margin-top:12px" onclick="goToShop()">Купить подписку</button>
       </div>
     </div>
@@ -409,21 +436,31 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
   <!-- PAGE: Success / Status -->
   <div id="page-success" class="hidden">
     <div class="success-card">
-      <div class="success-icon" id="success-icon"></div>
-      <div class="success-title" id="success-title">Ожидание оплаты</div>
-      <div class="success-subtitle" id="success-subtitle">Платёж обрабатывается...</div>
-      <div id="status-badge-wrap"><span class="status-badge status-pending" id="status-badge"><span class="poll-spinner"></span>Обработка</span></div>
+      <!-- Pending state -->
+      <div id="success-pending">
+        <div class="status-pill pending" id="status-pill"><div class="status-dot pulse"></div><span id="status-pill-text">Ожидание оплаты</span></div>
+        <div class="success-title" id="success-title">Обработка платежа</div>
+        <div class="success-subtitle" id="success-subtitle">Завершите оплату в окне платёжной системы</div>
+      </div>
 
-      <div id="sub-result" class="hidden">
-        <div class="sub-url-box" id="sub-url"></div>
-        <div style="display:flex;gap:8px;margin:12px 0">
-          <button class="btn" style="flex:1;margin:0" onclick="copySubUrl()">Скопировать</button>
-          <button class="btn btn-secondary" style="flex:1;margin:0" id="btn-share" onclick="shareKey()">Поделиться</button>
+      <!-- Delivered state -->
+      <div id="success-delivered" class="hidden">
+        <div class="status-pill active"><div class="status-dot"></div>Соединение активировано</div>
+        <div class="success-title" id="delivered-title">Ваш NetCloak готов к работе</div>
+        <div class="expiry-text" id="delivered-expiry"></div>
+
+        <div class="key-block" id="key-block">
+          <canvas id="qr-canvas" style="display:block;margin:0 auto 12px;border-radius:10px;background:#fff;padding:6px" width="180" height="180"></canvas>
+          <div class="key-preview" id="sub-url"></div>
+          <div class="key-actions">
+            <button class="btn" onclick="copySubUrl()" id="btn-copy-key">Скопировать ключ</button>
+            <a class="btn btn-secondary" href="https://t.me/ShadowHorizon_bot" target="_blank" style="text-align:center;text-decoration:none">Открыть в Telegram</a>
+          </div>
         </div>
-        <canvas id="qr-canvas" style="display:block;margin:12px auto;border-radius:12px;background:#fff;padding:8px"></canvas>
-        <p style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:12px">Отсканируйте QR или сделайте скриншот</p>
 
-        <div id="email-backup" style="margin:12px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+        <div id="success-onboarding"></div>
+
+        <div id="email-backup" style="margin:16px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
           <p style="font-size:13px;color:#fff;margin-bottom:4px">Оставьте email — отправим ключ и напомним о продлении</p>
           <p style="font-size:11px;color:var(--muted);margin-bottom:8px">Без спама. Только ключ и напоминание за 3 дня.</p>
           <div style="display:flex;gap:8px">
@@ -433,36 +470,31 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
           <p id="email-status" style="font-size:11px;color:var(--muted);margin-top:4px"></p>
         </div>
 
-        <div id="bookmark-hint" class="hidden" style="margin:12px 0;padding:12px;background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);border-radius:10px;font-size:12px;color:var(--cyan);text-align:center">
-          Сохраните ссылку — это ваш ключ доступа
-        </div>
-
-        <div class="steps">
-          <p style="font-weight:600;color:#fff;margin-bottom:12px">Как подключиться:</p>
-          <ol>
-            <li>Скачайте приложение:
-              <div class="apps-links" style="margin:8px 0">
-                <a href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank">Android — Hiddify</a>
-                <a href="https://github.com/hiddify/hiddify-app/releases" target="_blank">Android — APK</a>
-                <a href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">iOS — Streisand</a>
-                <a href="https://github.com/2dust/v2rayN/releases" target="_blank">Windows/Mac — v2rayN</a>
-              </div>
-            </li>
-            <li>Нажмите <b>Скопировать</b> или отсканируйте QR</li>
-            <li>В приложении: <b>+</b> затем <b>Импорт из буфера</b></li>
-            <li><b>Подключиться</b> — готово</li>
-          </ol>
+        <div class="trust-footer">
+          <div class="trust-footer-item"><span>&#x1F512;</span> Нет журналов активности</div>
+          <div class="trust-footer-item"><span>&#x1F30D;</span> Юрисдикция за пределами РФ</div>
+          <div class="trust-footer-item"><span>&#x21A9;</span> Возврат в течение 7 дней — через поддержку</div>
         </div>
       </div>
 
+      <!-- Sent to telegram -->
       <div id="sub-pending" class="hidden" style="margin-top:16px">
-        <p style="font-size:13px;color:var(--muted)">Ключ будет отправлен после обработки платежа.</p>
+        <p style="font-size:14px;color:var(--green)"></p>
       </div>
+
+      <!-- Error state -->
+      <div id="success-error" class="hidden">
+        <div class="status-pill error"><div class="status-dot"></div>Ошибка</div>
+        <div class="success-title">Платёж не прошёл</div>
+        <div class="success-subtitle">Попробуйте ещё раз или обратитесь в поддержку</div>
+      </div>
+
+      <!-- Activation needed -->
+      <div id="success-activate" class="hidden"></div>
 
       <div class="bot-promo">
-        <p style="font-size:14px;color:#fff">Подключите бот для уведомлений и продления</p>
+        <p style="font-size:14px;color:#fff">Продление и поддержка — в боте</p>
         <a href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
-        <p style="font-size:11px;color:var(--muted);margin-top:6px">Напоминания &middot; Поддержка &middot; Промокоды</p>
       </div>
       <button class="btn btn-secondary" style="margin-top:12px" onclick="goToShop()">Купить ещё</button>
     </div>
@@ -526,9 +558,11 @@ async function activateTrial() {
     }
     var data = await res.json();
     trialSubUrl = data.subscription_url;
-    document.getElementById('trial-sub-url').textContent = trialSubUrl;
-    document.getElementById('trial-icon').textContent = '\uD83C\uDF89';
-    generateQR(trialSubUrl, document.getElementById('trial-qr'), 200);
+    var trialUrlEl = document.getElementById('trial-sub-url');
+    trialUrlEl.textContent = trialSubUrl.length > 60 ? trialSubUrl.substring(0, 60) + '...' : trialSubUrl;
+    trialUrlEl.setAttribute('data-full', trialSubUrl);
+    generateQR(trialSubUrl, document.getElementById('trial-qr'), 180);
+    renderOnboarding('trial-onboarding');
     if (!navigator.share) {
       var shareBtn = document.getElementById('btn-share-trial');
       if (shareBtn) shareBtn.style.display = 'none';
@@ -550,16 +584,15 @@ async function activateTrial() {
 
 function copyTrialUrl() {
   if (!trialSubUrl) return;
+  var btn = document.getElementById('btn-copy-trial');
   navigator.clipboard.writeText(trialSubUrl).then(function() {
-    toast('Ссылка скопирована!', false);
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
   }).catch(function() {
-    var ta = document.createElement('textarea');
-    ta.value = trialSubUrl;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    toast('Ссылка скопирована!', false);
+    var ta = document.createElement('textarea'); ta.value = trialSubUrl;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
   });
 }
 
@@ -652,6 +685,76 @@ function esc(s) {
   var d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
+}
+
+// ===== OS ONBOARDING TABS =====
+var osData = [
+  {id:'android', label:'Android', app:'Hiddify', url:'https://play.google.com/store/apps/details?id=app.hiddify.com',
+   steps:['<a href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank">Установите Hiddify</a> из Google Play','Нажмите <b>Скопировать ключ</b> выше','В Hiddify нажмите <b>+</b> затем <b>Вставить из буфера</b>','Нажмите <b>Connect</b> — соединение установлено']},
+  {id:'iphone', label:'iPhone', app:'Streisand', url:'https://apps.apple.com/app/streisand/id6450534064',
+   steps:['<a href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">Установите Streisand</a> из App Store','Нажмите <b>Скопировать ключ</b> выше','В Streisand нажмите <b>+</b> затем <b>Вставить из буфера</b>','Нажмите <b>Connect</b> — соединение установлено']},
+  {id:'windows', label:'Windows', app:'v2rayN', url:'https://github.com/2dust/v2rayN/releases/latest',
+   steps:['<a href="https://github.com/2dust/v2rayN/releases/latest" target="_blank">Скачайте v2rayN</a> с GitHub','Нажмите <b>Скопировать ключ</b> выше','В v2rayN: <b>Servers → Add server from clipboard</b>','Правой кнопкой на сервер → <b>Set as active → Start</b>']},
+  {id:'mac', label:'Mac', app:'Hiddify', url:'https://github.com/hiddify/hiddify-app/releases/latest',
+   steps:['<a href="https://github.com/hiddify/hiddify-app/releases/latest" target="_blank">Скачайте Hiddify</a> для macOS','Нажмите <b>Скопировать ключ</b> выше','В Hiddify нажмите <b>+</b> затем <b>Вставить из буфера</b>','Нажмите <b>Connect</b> — соединение установлено']}
+];
+
+function renderOnboarding(containerId) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  container.textContent = '';
+
+  var title = document.createElement('p');
+  title.style.cssText = 'font-weight:600;color:#fff;margin:16px 0 8px;font-size:15px';
+  title.textContent = 'Как подключиться';
+  container.appendChild(title);
+
+  var tabs = document.createElement('div');
+  tabs.className = 'os-tabs';
+  osData.forEach(function(os, i) {
+    var tab = document.createElement('div');
+    tab.className = 'os-tab' + (i === 0 ? ' active' : '');
+    tab.textContent = os.label;
+    tab.onclick = function() { switchOsTab(containerId, i); };
+    tab.setAttribute('data-os', i);
+    tabs.appendChild(tab);
+  });
+  container.appendChild(tabs);
+
+  osData.forEach(function(os, i) {
+    var content = document.createElement('div');
+    content.className = 'os-content' + (i === 0 ? ' active' : '');
+    content.setAttribute('data-os-content', i);
+
+    os.steps.forEach(function(step, j) {
+      var row = document.createElement('div');
+      row.className = 'os-step';
+      var num = document.createElement('div');
+      num.className = 'os-step-num';
+      num.textContent = j + 1;
+      var text = document.createElement('div');
+      text.className = 'os-step-text';
+      text.innerHTML = step;
+      row.appendChild(num);
+      row.appendChild(text);
+      content.appendChild(row);
+    });
+
+    var check = document.createElement('a');
+    check.className = 'check-link';
+    check.href = 'https://2ip.ru';
+    check.target = '_blank';
+    check.textContent = 'Проверить соединение \u2192';
+    content.appendChild(check);
+
+    container.appendChild(content);
+  });
+}
+
+function switchOsTab(containerId, idx) {
+  var container = document.getElementById(containerId);
+  container.querySelectorAll('.os-tab').forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  container.querySelectorAll('.os-content').forEach(function(c, i) { c.classList.toggle('active', i === idx); });
 }
 
 // Override feature descriptions for better messaging
@@ -939,94 +1042,113 @@ async function pollPurchaseStatus(token) {
   check();
 }
 
+function hideAllSuccessStates() {
+  ['success-pending','success-delivered','success-error','success-activate','sub-pending'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+}
+
 function updateSuccessUI(status, data) {
-  var icon = document.getElementById('success-icon');
-  var title = document.getElementById('success-title');
-  var subtitle = document.getElementById('success-subtitle');
-  var badge = document.getElementById('status-badge');
-  var result = document.getElementById('sub-result');
-  var pending = document.getElementById('sub-pending');
+  hideAllSuccessStates();
 
   switch (status) {
     case 'pending_payment':
-      icon.textContent = '\u23F3';
-      title.textContent = 'Ожидание оплаты';
-      subtitle.textContent = 'Завершите оплату в окне платёжной системы';
-      badge.className = 'status-badge status-pending';
-      badge.textContent = '';
-      var s1 = document.createElement('span'); s1.className = 'poll-spinner';
-      badge.appendChild(s1); badge.appendChild(document.createTextNode('Ожидание'));
+      document.getElementById('success-pending').classList.remove('hidden');
+      document.getElementById('status-pill-text').textContent = 'Ожидание оплаты';
+      document.getElementById('success-title').textContent = 'Обработка платежа';
+      document.getElementById('success-subtitle').textContent = 'Завершите оплату в окне платёжной системы';
       break;
+
     case 'paid': case 'processing':
-      icon.textContent = '\u2699\uFE0F';
-      title.textContent = 'Платёж получен';
-      subtitle.textContent = 'Создаём подписку...';
-      badge.className = 'status-badge status-waiting';
-      badge.textContent = '';
-      var s2 = document.createElement('span'); s2.className = 'poll-spinner';
-      badge.appendChild(s2); badge.appendChild(document.createTextNode('Создание'));
+      document.getElementById('success-pending').classList.remove('hidden');
+      document.getElementById('status-pill-text').textContent = 'Платёж получен';
+      document.getElementById('success-title').textContent = 'Создаём подписку';
+      document.getElementById('success-subtitle').textContent = 'Это займёт несколько секунд...';
       break;
+
     case 'delivered':
-      icon.textContent = '\u2705';
-      title.textContent = 'Подписка активирована!';
-      subtitle.textContent = data.tariff_name ? data.tariff_name + ' \u2014 ' + data.period_days + ' дней' : 'Ваш ключ готов';
-      badge.className = 'status-badge status-delivered';
-      badge.textContent = 'Готово';
+      document.getElementById('success-delivered').classList.remove('hidden');
+      var titleEl = document.getElementById('delivered-title');
+      var expiryEl = document.getElementById('delivered-expiry');
+      titleEl.textContent = 'Ваш NetCloak готов к работе';
+      if (data.period_days) {
+        var expDate = new Date();
+        expDate.setDate(expDate.getDate() + data.period_days);
+        var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+        expiryEl.textContent = (data.tariff_name || 'Подписка') + ' \u00b7 до ' + expDate.getDate() + ' ' + months[expDate.getMonth()] + ' ' + expDate.getFullYear();
+      } else {
+        expiryEl.textContent = data.tariff_name || 'Ваш ключ готов';
+      }
+
       if (data.subscription_url) {
         currentSubUrl = data.subscription_url;
-        document.getElementById('sub-url').textContent = data.subscription_url;
-        result.classList.remove('hidden'); pending.classList.add('hidden');
-        generateQR(data.subscription_url, document.getElementById('qr-canvas'), 200);
-        if (!navigator.share) document.getElementById('btn-share').style.display = 'none';
-        showBookmarkHint();
+        var urlEl = document.getElementById('sub-url');
+        urlEl.textContent = data.subscription_url.length > 60 ? data.subscription_url.substring(0, 60) + '...' : data.subscription_url;
+        urlEl.setAttribute('data-full', data.subscription_url);
+        generateQR(data.subscription_url, document.getElementById('qr-canvas'), 180);
+        renderOnboarding('success-onboarding');
       } else {
-        result.classList.add('hidden'); pending.classList.remove('hidden');
+        document.getElementById('key-block').classList.add('hidden');
+        var pendEl = document.getElementById('sub-pending');
+        pendEl.classList.remove('hidden');
         var p1 = document.createElement('p');
         p1.style.cssText = 'font-size:14px;color:var(--green)';
         p1.textContent = '\u2705 Ключ отправлен на ' + (data.contact_value || 'указанный контакт');
-        pending.textContent = ''; pending.appendChild(p1);
+        pendEl.textContent = '';
+        pendEl.appendChild(p1);
       }
       break;
+
     case 'pending_activation':
-      icon.textContent = '\uD83D\uDD11';
-      title.textContent = 'Оплата прошла!';
-      subtitle.textContent = 'У вас уже есть активная подписка. Активируйте новую \u2014 она заменит текущую.';
-      badge.className = 'status-badge status-waiting';
-      badge.textContent = 'Ожидает активации';
+      document.getElementById('success-delivered').classList.remove('hidden');
+      document.getElementById('delivered-title').textContent = 'Оплата прошла!';
+      document.getElementById('delivered-expiry').textContent = 'У вас уже есть активная подписка';
       if (data.subscription_url) {
         currentSubUrl = data.subscription_url;
-        document.getElementById('sub-url').textContent = data.subscription_url;
-        result.classList.remove('hidden');
+        document.getElementById('sub-url').textContent = data.subscription_url.length > 60 ? data.subscription_url.substring(0, 60) + '...' : data.subscription_url;
+        document.getElementById('sub-url').setAttribute('data-full', data.subscription_url);
+        generateQR(data.subscription_url, document.getElementById('qr-canvas'), 180);
+        renderOnboarding('success-onboarding');
       } else {
-        result.classList.add('hidden'); pending.classList.remove('hidden'); pending.textContent = '';
+        document.getElementById('key-block').classList.add('hidden');
+        var actWrap = document.getElementById('success-activate');
+        actWrap.classList.remove('hidden');
+        actWrap.textContent = '';
         var actBtn = document.createElement('button');
         actBtn.className = 'btn'; actBtn.id = 'btn-activate'; actBtn.onclick = activatePurchase;
-        actBtn.textContent = '\u2705 Активировать подписку';
+        actBtn.textContent = 'Активировать новую подписку';
         var actP = document.createElement('p');
         actP.style.cssText = 'font-size:12px;color:var(--muted);margin-top:8px';
         actP.textContent = 'Текущая подписка будет заменена на новую';
-        pending.appendChild(actBtn); pending.appendChild(actP);
+        actWrap.appendChild(actBtn);
+        actWrap.appendChild(actP);
       }
       break;
+
     case 'failed': case 'error':
-      icon.textContent = '\u274C';
-      title.textContent = 'Ошибка';
-      subtitle.textContent = 'Платёж не прошёл. Попробуйте ещё раз.';
-      badge.className = 'status-badge';
-      badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#fca5a5'; badge.style.border = '1px solid rgba(239,68,68,.2)';
-      badge.textContent = 'Ошибка';
+      document.getElementById('success-error').classList.remove('hidden');
       break;
+
     default:
-      icon.textContent = '\u23F3'; title.textContent = 'Обработка'; subtitle.textContent = 'Статус: ' + status;
+      document.getElementById('success-pending').classList.remove('hidden');
+      document.getElementById('status-pill-text').textContent = 'Обработка';
+      document.getElementById('success-title').textContent = 'Обработка';
+      document.getElementById('success-subtitle').textContent = 'Статус: ' + status;
   }
 }
 
 function copySubUrl() {
   if (!currentSubUrl) return;
-  navigator.clipboard.writeText(currentSubUrl).then(function() { toast('Ссылка скопирована!', false); }).catch(function() {
+  var btn = document.getElementById('btn-copy-key');
+  navigator.clipboard.writeText(currentSubUrl).then(function() {
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
+  }).catch(function() {
     var ta = document.createElement('textarea'); ta.value = currentSubUrl;
     document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    toast('Ссылка скопирована!', false);
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
   });
 }
 
@@ -1066,7 +1188,7 @@ function goToShop() {
   init();
 }
 
-function showBookmarkHint() { var h = document.getElementById('bookmark-hint'); if (h) h.classList.remove('hidden'); }
+function showBookmarkHint() { /* deprecated */ }
 
 async function activatePurchase() {
   if (!currentToken) return;
