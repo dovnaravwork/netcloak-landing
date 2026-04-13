@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NetCloak — безопасный интернет</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 72'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='32' y1='0' x2='32' y2='72' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%231e40af'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M32 2L4 16v20c0 18 12 32 28 34 16-2 28-16 28-34V16L32 2z' fill='url(%23g)'/%3E%3Ctext x='32' y='50' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='700' fill='white'%3EN%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Безопасный интернет без логов и ограничений. От 99 руб/мес. Подключение за 2 минуты.">
+<meta name="robots" content="noindex,nofollow">
+<script>window.__configPromise=(async()=>{for(let i=0;i<3;i++){try{const r=await fetch('/api/cabinet/landing/buy?lang=ru');if(r.ok)return r.json()}catch(e){}await new Promise(r=>setTimeout(r,2000))}return null})();</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--card:#11111b;--card2:#16162a;
+  --accent:#3b82f6;--accent2:#2563eb;--cyan:#06b6d4;
+  --green:#22c55e;--red:#ef4444;
+  --text:#d4d4d8;--muted:#6b7280;--border:#1e1e3a;--radius:14px
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.container{max-width:480px;margin:0 auto;padding:0 16px 16px;position:relative;z-index:1}
+
+/* Caustic background */
+.caustic-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.caustic-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(ellipse 600px 400px at 30% 20%,rgba(59,130,246,.07) 0%,transparent 60%),
+  radial-gradient(ellipse 500px 500px at 70% 60%,rgba(6,182,212,.05) 0%,transparent 50%),
+  radial-gradient(ellipse 400px 300px at 50% 80%,rgba(59,130,246,.04) 0%,transparent 50%);
+  animation:caustic-drift 20s ease-in-out infinite alternate}
+.caustic-bg::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:.4}
+@keyframes caustic-drift{0%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-2%,1%) rotate(.5deg)}100%{transform:translate(1%,-1%) rotate(-.3deg)}}
+
+/* Film grain */
+.grain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='turbulence' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")}
+
+/* Hero */
+.hero{text-align:center;padding:48px 0 20px;position:relative}
+.caustic-mesh{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;
+  background:radial-gradient(circle 200px at 35% 45%,rgba(6,182,212,.08) 0%,transparent 70%),
+  radial-gradient(circle 150px at 65% 35%,rgba(59,130,246,.06) 0%,transparent 60%);
+  animation:caustic-pulse 12s ease-in-out infinite alternate;mix-blend-mode:screen}
+@keyframes caustic-pulse{0%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}100%{opacity:.7;transform:scale(.98)}}
+.logo-wrap{position:relative;display:inline-block;margin-bottom:16px}
+.logo-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(59,130,246,.2) 0%,rgba(6,182,212,.08) 40%,transparent 70%);
+  animation:logo-breathe 4s ease-in-out infinite;pointer-events:none}
+@keyframes logo-breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}50%{transform:translate(-50%,-50%) scale(1.15);opacity:1}}
+h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-1px}
+.subtitle{color:#fff;font-size:18px;font-weight:500;line-height:1.5;margin-bottom:6px}
+.subtitle-secondary{color:var(--muted);font-size:14px;margin-bottom:20px;letter-spacing:.2px}
+
+/* Trial CTA */
+.trial-cta{
+  display:block;width:100%;border:none;border-radius:var(--radius);padding:18px;
+  font-size:18px;font-weight:700;cursor:pointer;transition:all .3s;
+  background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;
+  box-shadow:0 4px 24px rgba(34,197,94,.2);position:relative;overflow:hidden;margin-bottom:8px}
+.trial-cta:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(34,197,94,.3)}
+.trial-cta:active{transform:translateY(0)}
+.trial-cta:disabled{background:#1a2e1a;color:#3a5a3a;cursor:not-allowed;transform:none;box-shadow:none}
+.trial-hint{color:var(--muted);font-size:12px;margin-bottom:16px}
+
+/* Buy link under trial */
+.buy-link{color:var(--cyan);font-size:14px;cursor:pointer;text-decoration:none;transition:color .2s}
+.buy-link:hover{color:var(--accent)}
+
+.trust-line{display:flex;justify-content:center;gap:16px;margin-top:16px;font-size:11px;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+
+/* Caustic divider */
+.caustic-divider{height:1px;margin:28px 0;background:linear-gradient(90deg,transparent,rgba(6,182,212,.3),rgba(59,130,246,.2),transparent)}
+
+/* Features */
+.features{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feature{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:18px 14px;text-align:center;transition:border-color .3s}
+.feature:hover{border-color:rgba(6,182,212,.3)}
+.feature-icon{font-size:28px;margin-bottom:8px}
+.feature-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px}
+.feature-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.speed-badge{text-align:center;margin-top:14px;font-size:13px;font-weight:500;color:var(--cyan);
+  background:linear-gradient(135deg,rgba(6,182,212,.06),rgba(59,130,246,.04));border:1px solid rgba(6,182,212,.15);border-radius:10px;padding:12px}
+
+/* No-logs block */
+.nologs{margin:20px 0;padding:16px;background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);text-align:center}
+.nologs-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.nologs-text{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* Section titles */
+.section-title{font-size:17px;font-weight:600;color:#fff;margin:28px 0 14px;text-align:center;letter-spacing:-.2px}
+
+/* Tariffs */
+.tariffs{display:flex;flex-direction:column;gap:10px}
+.tariff{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .3s;position:relative}
+.tariff.selected{border-color:var(--accent);box-shadow:0 0 24px rgba(59,130,246,.1)}
+.tariff-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tariff-name{font-size:16px;font-weight:600;color:#fff}
+.tariff-devices{font-size:12px;color:var(--muted)}
+.periods{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.period{background:var(--card);border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;border:1px solid var(--border);transition:all .3s;font-size:12px;position:relative}
+.period.selected{border-color:var(--cyan);background:rgba(6,182,212,.08);box-shadow:0 0 12px rgba(6,182,212,.1)}
+.period-days{font-weight:600;color:#fff;font-size:13px}
+.period-price{color:var(--cyan);font-size:13px;font-weight:600;margin-top:2px}
+.period-monthly{color:var(--muted);font-size:10px;margin-top:1px}
+.badge-best{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--cyan),var(--accent));color:#fff;font-size:9px;font-weight:700;padding:2px 10px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 8px rgba(6,182,212,.3)}
+
+/* Delivery */
+.contact-section{margin:20px 0}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.delivery-options{display:flex;gap:8px;margin-top:8px}
+.delivery-opt{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;font-size:13px;font-weight:500;transition:all .3s;color:var(--text)}
+.delivery-opt.selected{border-color:var(--cyan);background:rgba(6,182,212,.06);color:#fff}
+.contact-input{width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:16px;outline:none;transition:all .3s}
+.contact-input:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(6,182,212,.1)}
+.contact-input::placeholder{color:#3a3a50}
+
+/* Payment */
+.payment-methods{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.pm{background:var(--card);border-radius:10px;padding:14px 16px;cursor:pointer;border:1px solid var(--border);transition:all .3s;display:flex;align-items:center;gap:12px}
+.pm.selected{border-color:var(--accent);background:rgba(59,130,246,.05)}
+.pm-name{font-size:14px;font-weight:500}
+
+/* Total & CTA */
+.total{text-align:center;font-size:22px;font-weight:700;color:#fff;margin:24px 0 4px}
+.total span{color:var(--cyan)}
+.guarantee{text-align:center;font-size:12px;color:var(--muted);margin-bottom:8px}
+.btn{display:block;width:100%;border:none;border-radius:var(--radius);padding:16px;font-size:17px;font-weight:600;cursor:pointer;transition:all .3s;margin:14px 0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.15)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(59,130,246,.25)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{background:#1a1a2e;color:#3a3a50;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-secondary{background:var(--card2);border:1px solid var(--border);margin:8px 0;font-size:14px;padding:12px;box-shadow:none}
+.btn-secondary:hover{background:var(--card);border-color:rgba(6,182,212,.2);transform:none;box-shadow:none}
+
+/* FAQ */
+.faq{margin:8px 0 20px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:14px 0;cursor:pointer;font-size:14px;font-weight:500;color:#fff;-webkit-tap-highlight-color:transparent}
+.faq-q::after{content:'+';font-size:18px;color:var(--muted);transition:transform .2s;flex-shrink:0;margin-left:12px}
+.faq-item.open .faq-q::after{transform:rotate(45deg);color:var(--cyan)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:13px;color:var(--muted);line-height:1.6}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a-inner{padding:0 0 14px}
+
+/* Sticky CTA (mobile) */
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:12px 16px;
+  background:linear-gradient(to top,var(--bg) 60%,transparent);display:none}
+.sticky-cta button{display:block;width:100%;max-width:480px;margin:0 auto;border:none;border-radius:var(--radius);padding:16px;
+  font-size:16px;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;
+  box-shadow:0 -2px 20px rgba(34,197,94,.2)}
+@media(max-width:600px){.sticky-cta{display:block}body{padding-bottom:72px}}
+
+/* Footer */
+.footer{text-align:center;padding:24px 0 8px;color:var(--muted);font-size:12px;line-height:1.8;border-top:1px solid var(--border);margin-top:32px;position:relative}
+.footer::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.2),transparent)}
+.footer a{color:var(--cyan);text-decoration:none;transition:color .2s}
+.footer a:hover{color:var(--accent)}
+.footer-legal{margin-top:8px;font-size:11px;color:#444}
+.footer-legal a{color:#555}
+
+/* Utils */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:12px 24px;border-radius:10px;font-size:13px;z-index:10000;display:none;max-width:90%;text-align:center}
+.toast.success{background:var(--green)}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+.hidden{display:none}
+
+/* Success page */
+.success-card{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:28px 20px;margin:20px 0;text-align:center;position:relative;overflow:hidden}
+.success-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 0%,rgba(6,182,212,.06) 0%,transparent 60%);pointer-events:none}
+.success-icon{font-size:48px;margin-bottom:12px}
+.success-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+.success-subtitle{font-size:14px;color:var(--muted);margin-bottom:20px}
+.sub-url-box{background:var(--bg);border-radius:10px;padding:14px;margin:16px 0;word-break:break-all;font-family:'SF Mono',Consolas,monospace;font-size:11px;color:var(--muted);text-align:left;max-height:80px;overflow:auto;border:1px solid var(--border)}
+.steps{text-align:left;margin:16px 0}
+.steps li{margin:8px 0;font-size:14px;line-height:1.5}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.status-pending{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
+.status-delivered{background:rgba(110,231,183,.08);color:#6ee7b7;border:1px solid rgba(110,231,183,.2)}
+.status-waiting{background:rgba(165,180,252,.08);color:#a5b4fc;border:1px solid rgba(165,180,252,.2)}
+.poll-spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--muted);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.apps-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.apps-links a{color:var(--cyan);text-decoration:none;font-size:13px;padding:6px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px;transition:all .2s}
+.apps-links a:hover{border-color:var(--cyan)}
+.bot-promo{margin-top:20px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);text-align:center}
+.bot-promo a{display:inline-block;background:var(--accent);color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<div class="caustic-bg"></div>
+<div class="grain"></div>
+
+<div class="container">
+  <div id="toast" class="toast"></div>
+
+  <!-- PAGE: Shop -->
+  <div id="page-shop">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="caustic-mesh"></div>
+      <div class="logo-wrap">
+        <div class="logo-glow"></div>
+        <svg width="60" height="72" viewBox="0 0 56 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shield" x1="28" y1="0" x2="28" y2="68" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3b82f6"/><stop offset="1" stop-color="#1e40af"/>
+            </linearGradient>
+            <filter id="glow"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#3b82f6" flood-opacity=".5"/></filter>
+            <filter id="caustic-glow"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#06b6d4" flood-opacity=".3"/></filter>
+          </defs>
+          <path d="M28 3L3 15v17c0 8.5 3.5 16.5 9.5 22.5S25 64 28 65c3-1 9.5-3 15.5-9S53 41.5 53 32V15L28 3z" fill="url(#shield)" filter="url(#glow)"/>
+          <path d="M28 3L3 15v17c0 8.5 3.5 16.5 9.5 22.5S25 64 28 65V3z" fill="rgba(255,255,255,.06)"/>
+          <circle cx="28" cy="30" r="7" fill="none" stroke="rgba(6,182,212,.8)" stroke-width="2" filter="url(#caustic-glow)"/>
+          <rect x="25.5" y="35" width="5" height="8" rx="1.5" fill="rgba(255,255,255,.9)"/>
+          <path d="M22 37h12v7a3 3 0 01-3 3H25a3 3 0 01-3-3v-7z" fill="rgba(255,255,255,.85)"/>
+          <circle cx="28" cy="41" r="1.5" fill="#1e40af"/>
+        </svg>
+      </div>
+      <h1>NetCloak</h1>
+      <p class="subtitle">YouTube, Instagram, ChatGPT — без ограничений</p>
+      <p class="subtitle-secondary">Шифрование трафика. Без логов. Работает в РФ.</p>
+
+      <!-- TRIAL CTA -->
+      <button class="trial-cta" id="btn-trial" onclick="activateTrial()">7 дней бесплатно</button>
+      <p class="trial-hint">5 устройств &middot; без карты &middot; без регистрации</p>
+
+      <p><a class="buy-link" onclick="scrollToTariffs()">Уже пользуетесь? Продлить подписку &darr;</a></p>
+
+      <div class="trust-line">
+        <span>2 мин</span><span>&middot;</span><span>Uptime 99.9%</span><span>&middot;</span><span>24/7</span>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="caustic-divider"></div>
+    <div id="features" class="features"></div>
+    <div class="speed-badge">Подключение за 2 минуты — без технических знаний</div>
+
+    <!-- NO-LOGS -->
+    <div class="nologs">
+      <div class="nologs-title">Не храним логи</div>
+      <div class="nologs-text">Мы не знаем, какие сайты вы посещаете. Шифрование военного уровня. Серверы в Европе.</div>
+    </div>
+
+    <div id="loading" class="loading">Загрузка тарифов...</div>
+
+    <!-- TARIFFS + DELIVERY + PAYMENT -->
+    <div id="shop-content" class="hidden">
+      <div class="caustic-divider"></div>
+      <p class="section-title" id="tariffs-anchor">Выберите тариф</p>
+      <div id="tariffs" class="tariffs"></div>
+
+      <div class="contact-section">
+        <div class="input-group">
+          <label>Как получить ключ</label>
+          <div class="delivery-options">
+            <div class="delivery-opt selected" data-type="site" onclick="selectDelivery('site')">На сайте</div>
+            <div class="delivery-opt" data-type="telegram" onclick="selectDelivery('telegram')">Telegram</div>
+          </div>
+          <div id="contact-input-wrap" class="hidden" style="margin-top:10px">
+            <input type="text" id="contact-value" class="contact-input" placeholder="@username">
+          </div>
+        </div>
+      </div>
+
+      <p class="section-title">Способ оплаты</p>
+      <div id="payment-methods" class="payment-methods"></div>
+
+      <div class="total">К оплате: <span id="total-price">&mdash;</span></div>
+      <p class="guarantee">Возврат в течение 7 дней, если что-то не устроит</p>
+      <button class="btn" id="btn-buy" disabled onclick="purchase()">Оплатить</button>
+    </div>
+
+    <!-- FAQ -->
+    <div class="caustic-divider"></div>
+    <p class="section-title">Частые вопросы</p>
+    <div class="faq">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Как это работает?</div>
+        <div class="faq-a"><div class="faq-a-inner">NetCloak шифрует весь ваш интернет-трафик и направляет его через защищённые серверы в Европе. Для вашего провайдера трафик выглядит как обычный HTTPS — неотличим от посещения обычных сайтов.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Вы ведёте логи?</div>
+        <div class="faq-a"><div class="faq-a-inner">Нет. Мы не храним историю посещений, IP-адреса и данные о трафике. Технически не можем — логирование отключено на уровне сервера.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">На каких устройствах работает?</div>
+        <div class="faq-a"><div class="faq-a-inner">Android (v2rayNG), iPhone/iPad (Streisand), Windows и Mac (Hiddify). Подключение занимает 2 минуты — скопируйте ключ и вставьте в приложение.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Работает ли в России?</div>
+        <div class="faq-a"><div class="faq-a-inner">Да. Мы используем современные протоколы шифрования, которые не обнаруживаются системами анализа трафика. 2 сервера с автопереключением — если один недоступен, трафик идёт через второй.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Какие способы оплаты?</div>
+        <div class="faq-a"><div class="faq-a-inner">Банковские карты и СБП (через ЮKassa), криптовалюта USDT/TON (через CryptoBot), Telegram Stars (в боте). Все способы работают из России.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Можно ли вернуть деньги?</div>
+        <div class="faq-a"><div class="faq-a-inner">Да, в течение 7 дней после оплаты. Напишите в поддержку @netcloak_support_bot — вернём без вопросов.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Trial Success -->
+  <div id="page-trial" class="hidden">
+    <div class="success-card">
+      <div class="success-icon" id="trial-icon"></div>
+      <div class="success-title" id="trial-title">Триал активирован!</div>
+      <div class="success-subtitle">7 дней &middot; 5 устройств &middot; безлимит</div>
+
+      <div id="trial-result">
+        <div class="sub-url-box" id="trial-sub-url"></div>
+        <div style="display:flex;gap:8px;margin:12px 0">
+          <button class="btn" style="flex:1;margin:0" onclick="copyTrialUrl()">Скопировать</button>
+          <button class="btn btn-secondary" style="flex:1;margin:0" id="btn-share-trial" onclick="shareTrialUrl()">Поделиться</button>
+        </div>
+        <canvas id="trial-qr" style="display:block;margin:12px auto;border-radius:12px;background:#fff;padding:8px"></canvas>
+
+        <div class="steps">
+          <p style="font-weight:600;color:#fff;margin-bottom:12px">Подключение за 2 минуты:</p>
+          <ol>
+            <li>Скачайте приложение:
+              <div class="apps-links" style="margin:8px 0">
+                <a href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank">Android — Hiddify</a>
+                <a href="https://github.com/hiddify/hiddify-app/releases" target="_blank">Android — APK</a>
+                <a href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">iOS — Streisand</a>
+                <a href="https://github.com/2dust/v2rayN/releases" target="_blank">Windows/Mac — v2rayN</a>
+              </div>
+            </li>
+            <li>Нажмите <b>Скопировать</b> выше</li>
+            <li>В приложении: <b>+</b> затем <b>Импорт из буфера</b></li>
+            <li><b>Подключиться</b> — готово</li>
+          </ol>
+        </div>
+
+        <div class="bot-promo">
+          <p style="font-size:14px;color:#fff">Подключите бот для продления и поддержки</p>
+          <a href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
+          <p style="font-size:11px;color:var(--muted);margin-top:6px">Работает после подключения</p>
+        </div>
+
+        <button class="btn btn-secondary" style="margin-top:12px" onclick="goToShop()">Купить подписку</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Success / Status -->
+  <div id="page-success" class="hidden">
+    <div class="success-card">
+      <div class="success-icon" id="success-icon"></div>
+      <div class="success-title" id="success-title">Ожидание оплаты</div>
+      <div class="success-subtitle" id="success-subtitle">Платёж обрабатывается...</div>
+      <div id="status-badge-wrap"><span class="status-badge status-pending" id="status-badge"><span class="poll-spinner"></span>Обработка</span></div>
+
+      <div id="sub-result" class="hidden">
+        <div class="sub-url-box" id="sub-url"></div>
+        <div style="display:flex;gap:8px;margin:12px 0">
+          <button class="btn" style="flex:1;margin:0" onclick="copySubUrl()">Скопировать</button>
+          <button class="btn btn-secondary" style="flex:1;margin:0" id="btn-share" onclick="shareKey()">Поделиться</button>
+        </div>
+        <canvas id="qr-canvas" style="display:block;margin:12px auto;border-radius:12px;background:#fff;padding:8px"></canvas>
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:12px">Отсканируйте QR или сделайте скриншот</p>
+
+        <div id="email-backup" style="margin:12px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+          <p style="font-size:13px;color:#fff;margin-bottom:4px">Оставьте email — отправим ключ и напомним о продлении</p>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:8px">Без спама. Только ключ и напоминание за 3 дня.</p>
+          <div style="display:flex;gap:8px">
+            <input type="email" id="backup-email" class="contact-input" placeholder="email@example.com" style="flex:1;padding:12px">
+            <button class="btn" style="width:auto;margin:0;padding:12px 20px;font-size:14px" id="btn-save-email" onclick="saveEmail()">&#x2192;</button>
+          </div>
+          <p id="email-status" style="font-size:11px;color:var(--muted);margin-top:4px"></p>
+        </div>
+
+        <div id="bookmark-hint" class="hidden" style="margin:12px 0;padding:12px;background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);border-radius:10px;font-size:12px;color:var(--cyan);text-align:center">
+          Сохраните ссылку — это ваш ключ доступа
+        </div>
+
+        <div class="steps">
+          <p style="font-weight:600;color:#fff;margin-bottom:12px">Как подключиться:</p>
+          <ol>
+            <li>Скачайте приложение:
+              <div class="apps-links" style="margin:8px 0">
+                <a href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank">Android — Hiddify</a>
+                <a href="https://github.com/hiddify/hiddify-app/releases" target="_blank">Android — APK</a>
+                <a href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">iOS — Streisand</a>
+                <a href="https://github.com/2dust/v2rayN/releases" target="_blank">Windows/Mac — v2rayN</a>
+              </div>
+            </li>
+            <li>Нажмите <b>Скопировать</b> или отсканируйте QR</li>
+            <li>В приложении: <b>+</b> затем <b>Импорт из буфера</b></li>
+            <li><b>Подключиться</b> — готово</li>
+          </ol>
+        </div>
+      </div>
+
+      <div id="sub-pending" class="hidden" style="margin-top:16px">
+        <p style="font-size:13px;color:var(--muted)">Ключ будет отправлен после обработки платежа.</p>
+      </div>
+
+      <div class="bot-promo">
+        <p style="font-size:14px;color:#fff">Подключите бот для уведомлений и продления</p>
+        <a href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
+        <p style="font-size:11px;color:var(--muted);margin-top:6px">Напоминания &middot; Поддержка &middot; Промокоды</p>
+      </div>
+      <button class="btn btn-secondary" style="margin-top:12px" onclick="goToShop()">Купить ещё</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <a href="https://t.me/N3tC10ak">Канал</a> &middot;
+    <a href="https://t.me/ShadowHorizon_bot">Бот</a> &middot;
+    <a href="https://t.me/netcloak_support_bot">Поддержка</a>
+    <div class="footer-legal">
+      <a href="/privacy">Политика конфиденциальности</a> &middot;
+      <a href="/terms">Условия использования</a>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY CTA (mobile) -->
+<div class="sticky-cta" id="sticky-cta">
+  <button onclick="activateTrial()" id="sticky-trial-btn">7 дней бесплатно</button>
+</div>
+
+<script>
+var API_BASE = '/api/cabinet/landing';
+var SLUG = 'buy';
+var config = null;
+var selectedTariff = 0;
+var selectedPeriod = 0;
+var selectedPayment = 0;
+var currentSubUrl = '';
+var pollTimer = null;
+var currentToken = '';
+var trialSubUrl = '';
+
+// ===== TRIAL =====
+async function activateTrial() {
+  var btn = document.getElementById('btn-trial');
+  var stickyBtn = document.getElementById('sticky-trial-btn');
+  btn.disabled = true;
+  btn.textContent = 'Активируем...';
+  if (stickyBtn) stickyBtn.textContent = 'Активируем...';
+
+  try {
+    // Get ref from URL if present
+    var params = new URLSearchParams(window.location.search);
+    var refCode = params.get('ref') || '';
+    var url = '/site-api/trial';
+    if (refCode) url += '?ref=' + encodeURIComponent(refCode);
+
+    var res = await fetch(url, { method: 'POST' });
+    if (res.status === 429) {
+      toast('Триал уже был активирован. Используйте бот для нового триала.', true);
+      btn.disabled = false;
+      btn.textContent = '7 дней бесплатно';
+      if (stickyBtn) stickyBtn.textContent = '7 дней бесплатно';
+      return;
+    }
+    if (!res.ok) throw new Error('Ошибка активации');
+    var data = await res.json();
+    trialSubUrl = data.subscription_url;
+    document.getElementById('trial-sub-url').textContent = trialSubUrl;
+    document.getElementById('trial-icon').textContent = '\uD83C\uDF89';
+    generateQR(trialSubUrl, document.getElementById('trial-qr'), 200);
+    if (!navigator.share) {
+      var shareBtn = document.getElementById('btn-share-trial');
+      if (shareBtn) shareBtn.style.display = 'none';
+    }
+    showPage('trial');
+    hideStickyTrialCta();
+  } catch (e) {
+    toast(e.message || 'Ошибка', true);
+    btn.disabled = false;
+    btn.textContent = '7 дней бесплатно';
+    if (stickyBtn) stickyBtn.textContent = '7 дней бесплатно';
+  }
+}
+
+function copyTrialUrl() {
+  if (!trialSubUrl) return;
+  navigator.clipboard.writeText(trialSubUrl).then(function() {
+    toast('Ссылка скопирована!', false);
+  }).catch(function() {
+    var ta = document.createElement('textarea');
+    ta.value = trialSubUrl;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('Ссылка скопирована!', false);
+  });
+}
+
+function shareTrialUrl() {
+  if (!trialSubUrl) return;
+  if (navigator.share) {
+    navigator.share({ title: 'NetCloak \u2014 ключ подключения', text: trialSubUrl }).catch(function() {});
+  } else {
+    copyTrialUrl();
+  }
+}
+
+// ===== STICKY CTA =====
+function hideStickyTrialCta() {
+  var s = document.getElementById('sticky-cta');
+  if (s) s.style.display = 'none';
+}
+
+// Hide sticky when scrolled to tariffs
+var stickyHidden = false;
+window.addEventListener('scroll', function() {
+  if (stickyHidden) return;
+  var anchor = document.getElementById('tariffs-anchor');
+  if (anchor && anchor.getBoundingClientRect().top < window.innerHeight) {
+    // Don't hide - user might still want trial
+  }
+}, {passive: true});
+
+// ===== FAQ =====
+function toggleFaq(item) {
+  item.classList.toggle('open');
+}
+
+// ===== ROUTING =====
+function scrollToTariffs() {
+  var el = document.getElementById('tariffs-anchor');
+  if (el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function route() {
+  var path = window.location.pathname;
+  var m = path.match(/\/buy\/success\/(.+)/);
+  if (m) {
+    currentToken = m[1];
+    localStorage.setItem('nc_purchase_token', currentToken);
+    showPage('success');
+    hideStickyTrialCta();
+    pollPurchaseStatus(currentToken);
+  } else {
+    var savedToken = localStorage.getItem('nc_purchase_token');
+    if (savedToken) {
+      currentToken = savedToken;
+      showPage('success');
+      hideStickyTrialCta();
+      pollPurchaseStatus(savedToken);
+    } else {
+      showPage('shop');
+      init();
+    }
+  }
+}
+
+function showPage(name) {
+  document.getElementById('page-shop').classList.toggle('hidden', name !== 'shop');
+  document.getElementById('page-success').classList.toggle('hidden', name !== 'success');
+  document.getElementById('page-trial').classList.toggle('hidden', name !== 'trial');
+}
+
+async function init() {
+  try {
+    config = await window.__configPromise;
+    if (!config) throw new Error('no data');
+    renderShop();
+  } catch (e) {
+    document.getElementById('loading').style.display = 'none';
+    toast('Не удалось загрузить тарифы. Обновите страницу.', true);
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function renderFeatures() {
+  var container = document.getElementById('features');
+  while (container.firstChild) container.removeChild(container.firstChild);
+  config.features.forEach(function(f) {
+    var div = document.createElement('div');
+    div.className = 'feature';
+    var iconDiv = document.createElement('div');
+    iconDiv.className = 'feature-icon';
+    iconDiv.textContent = f.icon;
+    var titleDiv = document.createElement('div');
+    titleDiv.className = 'feature-title';
+    titleDiv.textContent = f.title;
+    var descDiv = document.createElement('div');
+    descDiv.className = 'feature-desc';
+    descDiv.textContent = f.description;
+    div.appendChild(iconDiv);
+    div.appendChild(titleDiv);
+    div.appendChild(descDiv);
+    container.appendChild(div);
+  });
+}
+
+function renderTariffs() {
+  var container = document.getElementById('tariffs');
+  while (container.firstChild) container.removeChild(container.firstChild);
+  config.tariffs.forEach(function(t, i) {
+    var tariffDiv = document.createElement('div');
+    tariffDiv.className = 'tariff';
+    tariffDiv.setAttribute('data-i', i);
+    tariffDiv.onclick = function() { selectTariff(i); };
+    var header = document.createElement('div');
+    header.className = 'tariff-header';
+    var nameSpan = document.createElement('span');
+    nameSpan.className = 'tariff-name';
+    nameSpan.textContent = t.name;
+    var devicesSpan = document.createElement('span');
+    devicesSpan.className = 'tariff-devices';
+    devicesSpan.textContent = t.device_limit + ' устр. \u00b7 безлимит';
+    header.appendChild(nameSpan);
+    header.appendChild(devicesSpan);
+    tariffDiv.appendChild(header);
+    var periodsDiv = document.createElement('div');
+    periodsDiv.className = 'periods';
+    t.periods.forEach(function(p, j) {
+      var periodDiv = document.createElement('div');
+      periodDiv.className = 'period';
+      periodDiv.setAttribute('data-t', i);
+      periodDiv.setAttribute('data-p', j);
+      periodDiv.onclick = function(e) { e.stopPropagation(); selectPeriod(i, j); };
+      var isBest = p.days > 180;
+      if (isBest) {
+        var badge = document.createElement('span');
+        badge.className = 'badge-best';
+        badge.textContent = 'Выгодно';
+        periodDiv.appendChild(badge);
+      }
+      var daysDiv = document.createElement('div');
+      daysDiv.className = 'period-days';
+      var label = p.days <= 7 ? p.days+'дн' : p.days <= 30 ? '1 мес' : p.days <= 90 ? '3 мес' : p.days <= 180 ? '6 мес' : '1 год';
+      daysDiv.textContent = label;
+      periodDiv.appendChild(daysDiv);
+      var priceDiv = document.createElement('div');
+      priceDiv.className = 'period-price';
+      priceDiv.textContent = p.price_label;
+      periodDiv.appendChild(priceDiv);
+      if (p.days >= 60) {
+        var moDiv = document.createElement('div');
+        moDiv.className = 'period-monthly';
+        moDiv.textContent = Math.round(p.price_kopeks / (p.days / 30) / 100) + ' \u20bd/мес';
+        periodDiv.appendChild(moDiv);
+      }
+      periodsDiv.appendChild(periodDiv);
+    });
+    tariffDiv.appendChild(periodsDiv);
+    container.appendChild(tariffDiv);
+  });
+}
+
+function renderPaymentMethods() {
+  var container = document.getElementById('payment-methods');
+  while (container.firstChild) container.removeChild(container.firstChild);
+  var icons = {'yookassa':'\uD83D\uDCB3','cryptobot':'\uD83D\uDC8E','telegram_stars':'\u2B50'};
+  config.payment_methods.forEach(function(m, i) {
+    var div = document.createElement('div');
+    div.className = 'pm';
+    div.setAttribute('data-i', i);
+    div.onclick = function() { selectPayment(i); };
+    var iconSpan = document.createElement('span');
+    iconSpan.textContent = icons[m.method_id] || '\uD83D\uDCB0';
+    var nameSpan = document.createElement('span');
+    nameSpan.className = 'pm-name';
+    nameSpan.textContent = m.display_name;
+    div.appendChild(iconSpan);
+    div.appendChild(nameSpan);
+    container.appendChild(div);
+  });
+}
+
+function renderShop() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('shop-content').classList.remove('hidden');
+  renderFeatures();
+  renderTariffs();
+  renderPaymentMethods();
+  selectTariff(0);
+  if (config.payment_methods.length > 0) selectPayment(0);
+}
+
+function selectTariff(i) {
+  selectedTariff = i;
+  document.querySelectorAll('.tariff').forEach(function(el, j) { el.classList.toggle('selected', j===i); });
+  selectPeriod(i, 0);
+}
+
+function selectPeriod(ti, pi) {
+  if (ti !== selectedTariff) selectTariff(ti);
+  selectedPeriod = pi;
+  document.querySelectorAll('.period').forEach(function(el) {
+    el.classList.toggle('selected', +el.dataset.t===ti && +el.dataset.p===pi);
+  });
+  updateTotal();
+}
+
+function selectPayment(i) {
+  selectedPayment = i;
+  document.querySelectorAll('.pm').forEach(function(el, j) { el.classList.toggle('selected', j===i); });
+  updateTotal();
+}
+
+function updateTotal() {
+  var p = config.tariffs[selectedTariff].periods[selectedPeriod];
+  document.getElementById('total-price').textContent = p.price_label;
+  document.getElementById('btn-buy').disabled = false;
+}
+
+var deliveryType = 'site';
+
+function selectDelivery(type) {
+  deliveryType = type;
+  document.querySelectorAll('.delivery-opt').forEach(function(el) { el.classList.toggle('selected', el.dataset.type === type); });
+  var wrap = document.getElementById('contact-input-wrap');
+  var inp = document.getElementById('contact-value');
+  if (type === 'site') {
+    wrap.classList.add('hidden');
+    inp.value = '';
+  } else {
+    wrap.classList.remove('hidden');
+    inp.placeholder = type === 'telegram' ? '@username' : 'email@example.com';
+    inp.type = type === 'email' ? 'email' : 'text';
+    inp.value = '';
+  }
+}
+
+async function purchase() {
+  var contactType, contactValue;
+  if (deliveryType === 'site') {
+    contactType = 'email';
+    contactValue = 'site-' + Math.random().toString(36).slice(2, 10) + '@netcloak.win';
+  } else {
+    contactType = deliveryType;
+    contactValue = document.getElementById('contact-value').value.trim();
+    if (!contactValue) { toast(contactType === 'telegram' ? 'Введите @username' : 'Введите email', true); return; }
+    if (contactType === 'telegram') {
+      if (!contactValue.startsWith('@')) contactValue = '@' + contactValue;
+      if (!/^@[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(contactValue)) { toast('Некорректный username. Пример: @username', true); return; }
+    }
+    if (contactType === 'email') {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactValue)) { toast('Некорректный email', true); return; }
+    }
+  }
+  var tariff = config.tariffs[selectedTariff];
+  var period = tariff.periods[selectedPeriod];
+  var pm = config.payment_methods[selectedPayment];
+  var btn = document.getElementById('btn-buy');
+  btn.disabled = true;
+  btn.textContent = 'Создаём платёж...';
+  try {
+    var res = await fetch(API_BASE + '/' + SLUG + '/purchase', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ tariff_id: tariff.id, period_days: period.days, contact_type: contactType, contact_value: contactValue, payment_method: pm.method_id })
+    });
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      var msg = Array.isArray(err.detail) ? (err.detail[0] && err.detail[0].msg) || 'Ошибка' : err.detail || 'Ошибка создания платежа';
+      throw new Error(msg);
+    }
+    var data = await res.json();
+    localStorage.setItem('nc_purchase_token', data.purchase_token);
+    try { window.location.assign(data.payment_url); } catch(e) { window.open(data.payment_url, '_self'); }
+  } catch (e) {
+    toast(e.message || String(e), true);
+    btn.disabled = false;
+    btn.textContent = 'Оплатить';
+  }
+}
+
+async function pollPurchaseStatus(token) {
+  currentToken = token;
+  var attempts = 0;
+  var maxAttempts = 60;
+  async function check() {
+    try {
+      var res = await fetch(API_BASE + '/purchase/' + token);
+      if (res.status === 404) { localStorage.removeItem('nc_purchase_token'); goToShop(); return; }
+      if (!res.ok) { updateSuccessUI('error', null); return; }
+      var data = await res.json();
+      updateSuccessUI(data.status, data);
+      if (data.status === 'delivered' || data.status === 'pending_activation') return;
+      attempts++;
+      if (attempts < maxAttempts) pollTimer = setTimeout(check, 3000);
+    } catch (e) {
+      attempts++;
+      if (attempts < maxAttempts) pollTimer = setTimeout(check, 5000);
+    }
+  }
+  check();
+}
+
+function updateSuccessUI(status, data) {
+  var icon = document.getElementById('success-icon');
+  var title = document.getElementById('success-title');
+  var subtitle = document.getElementById('success-subtitle');
+  var badge = document.getElementById('status-badge');
+  var result = document.getElementById('sub-result');
+  var pending = document.getElementById('sub-pending');
+
+  switch (status) {
+    case 'pending_payment':
+      icon.textContent = '\u23F3';
+      title.textContent = 'Ожидание оплаты';
+      subtitle.textContent = 'Завершите оплату в окне платёжной системы';
+      badge.className = 'status-badge status-pending';
+      badge.textContent = '';
+      var s1 = document.createElement('span'); s1.className = 'poll-spinner';
+      badge.appendChild(s1); badge.appendChild(document.createTextNode('Ожидание'));
+      break;
+    case 'paid': case 'processing':
+      icon.textContent = '\u2699\uFE0F';
+      title.textContent = 'Платёж получен';
+      subtitle.textContent = 'Создаём подписку...';
+      badge.className = 'status-badge status-waiting';
+      badge.textContent = '';
+      var s2 = document.createElement('span'); s2.className = 'poll-spinner';
+      badge.appendChild(s2); badge.appendChild(document.createTextNode('Создание'));
+      break;
+    case 'delivered':
+      icon.textContent = '\u2705';
+      title.textContent = 'Подписка активирована!';
+      subtitle.textContent = data.tariff_name ? data.tariff_name + ' \u2014 ' + data.period_days + ' дней' : 'Ваш ключ готов';
+      badge.className = 'status-badge status-delivered';
+      badge.textContent = 'Готово';
+      if (data.subscription_url) {
+        currentSubUrl = data.subscription_url;
+        document.getElementById('sub-url').textContent = data.subscription_url;
+        result.classList.remove('hidden'); pending.classList.add('hidden');
+        generateQR(data.subscription_url, document.getElementById('qr-canvas'), 200);
+        if (!navigator.share) document.getElementById('btn-share').style.display = 'none';
+        showBookmarkHint();
+      } else {
+        result.classList.add('hidden'); pending.classList.remove('hidden');
+        var p1 = document.createElement('p');
+        p1.style.cssText = 'font-size:14px;color:var(--green)';
+        p1.textContent = '\u2705 Ключ отправлен на ' + (data.contact_value || 'указанный контакт');
+        pending.textContent = ''; pending.appendChild(p1);
+      }
+      break;
+    case 'pending_activation':
+      icon.textContent = '\uD83D\uDD11';
+      title.textContent = 'Оплата прошла!';
+      subtitle.textContent = 'У вас уже есть активная подписка. Активируйте новую \u2014 она заменит текущую.';
+      badge.className = 'status-badge status-waiting';
+      badge.textContent = 'Ожидает активации';
+      if (data.subscription_url) {
+        currentSubUrl = data.subscription_url;
+        document.getElementById('sub-url').textContent = data.subscription_url;
+        result.classList.remove('hidden');
+      } else {
+        result.classList.add('hidden'); pending.classList.remove('hidden'); pending.textContent = '';
+        var actBtn = document.createElement('button');
+        actBtn.className = 'btn'; actBtn.id = 'btn-activate'; actBtn.onclick = activatePurchase;
+        actBtn.textContent = '\u2705 Активировать подписку';
+        var actP = document.createElement('p');
+        actP.style.cssText = 'font-size:12px;color:var(--muted);margin-top:8px';
+        actP.textContent = 'Текущая подписка будет заменена на новую';
+        pending.appendChild(actBtn); pending.appendChild(actP);
+      }
+      break;
+    case 'failed': case 'error':
+      icon.textContent = '\u274C';
+      title.textContent = 'Ошибка';
+      subtitle.textContent = 'Платёж не прошёл. Попробуйте ещё раз.';
+      badge.className = 'status-badge';
+      badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#fca5a5'; badge.style.border = '1px solid rgba(239,68,68,.2)';
+      badge.textContent = 'Ошибка';
+      break;
+    default:
+      icon.textContent = '\u23F3'; title.textContent = 'Обработка'; subtitle.textContent = 'Статус: ' + status;
+  }
+}
+
+function copySubUrl() {
+  if (!currentSubUrl) return;
+  navigator.clipboard.writeText(currentSubUrl).then(function() { toast('Ссылка скопирована!', false); }).catch(function() {
+    var ta = document.createElement('textarea'); ta.value = currentSubUrl;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    toast('Ссылка скопирована!', false);
+  });
+}
+
+function generateQR(text, canvas, size) {
+  var img = new Image(); img.crossOrigin = 'anonymous';
+  img.onload = function() { canvas.width = size; canvas.height = size; var ctx = canvas.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,size,size); ctx.drawImage(img,0,0,size,size); };
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=' + size + 'x' + size + '&data=' + encodeURIComponent(text);
+}
+
+function shareKey() {
+  if (!currentSubUrl) return;
+  if (navigator.share) { navigator.share({ title: 'NetCloak', text: currentSubUrl }).catch(function(){}); } else { copySubUrl(); }
+}
+
+async function saveEmail() {
+  var emailInput = document.getElementById('backup-email');
+  var status = document.getElementById('email-status');
+  var btn = document.getElementById('btn-save-email');
+  var email = emailInput.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = 'Введите корректный email'; status.style.color = 'var(--red)'; return; }
+  btn.disabled = true; status.textContent = 'Сохраняем...'; status.style.color = 'var(--muted)';
+  if (currentToken) { try { await fetch('/internal/save-email', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: currentToken, email: email}) }); } catch(e) {} }
+  try {
+    var subject = encodeURIComponent('NetCloak \u2014 ваш ключ');
+    var body = encodeURIComponent('Ваш ключ NetCloak:\n\n' + currentSubUrl + '\n\n1. Скачайте Hiddify или Streisand\n2. Скопируйте ссылку\n3. + \u2192 Импорт из буфера\n4. Подключитесь');
+    window.open('mailto:' + email + '?subject=' + subject + '&body=' + body, '_blank');
+  } catch(e) {}
+  status.textContent = '\u2705 Email сохранён.'; status.style.color = 'var(--green)'; btn.textContent = '\u2713';
+}
+
+function goToShop() {
+  localStorage.removeItem('nc_purchase_token');
+  history.replaceState(null, '', '/');
+  showPage('shop');
+  var sticky = document.getElementById('sticky-cta');
+  if (sticky && window.innerWidth <= 600) sticky.style.display = 'block';
+  init();
+}
+
+function showBookmarkHint() { var h = document.getElementById('bookmark-hint'); if (h) h.classList.remove('hidden'); }
+
+async function activatePurchase() {
+  if (!currentToken) return;
+  var btn = document.getElementById('btn-activate');
+  if (btn) { btn.disabled = true; btn.textContent = 'Активируем...'; }
+  try {
+    var res = await fetch(API_BASE + '/activate/' + currentToken, { method: 'POST' });
+    if (!res.ok) { var err = await res.json().catch(function(){ return {}; }); throw new Error(Array.isArray(err.detail) ? (err.detail[0] && err.detail[0].msg) : err.detail || 'Ошибка активации'); }
+    var data = await res.json(); updateSuccessUI(data.status, data); toast('Подписка активирована!', false);
+  } catch (e) { toast(e.message || 'Ошибка активации', true); if (btn) { btn.disabled = false; btn.textContent = '\u2705 Активировать подписку'; } }
+}
+
+function toast(msg, isError) {
+  var el = document.getElementById('toast'); el.textContent = msg;
+  el.className = isError ? 'toast' : 'toast success'; el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 4000);
+}
+
+route();
+</script>
+</body>
+</html>
