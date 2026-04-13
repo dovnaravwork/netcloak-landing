@@ -1,0 +1,5 @@
+/site-api/* https://api.netcloak.win/site-api/:splat 200
+/api/* https://api.netcloak.win/api/:splat 200
+/internal/* https://api.netcloak.win/internal/:splat 200
+/buy/* /index.html 200
+/* /index.html 200
