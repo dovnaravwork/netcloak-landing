@@ -515,13 +515,15 @@ async function activateTrial() {
 
     var res = await fetch(url, { method: 'POST' });
     if (res.status === 429) {
-      toast('Триал уже был активирован. Используйте бот для нового триала.', true);
-      btn.disabled = false;
-      btn.textContent = '7 дней бесплатно';
-      if (stickyBtn) stickyBtn.textContent = '7 дней бесплатно';
+      toast('Триал уже активирован с вашего IP. Получите триал через бот @ShadowHorizon_bot', true);
+      btn.textContent = 'Триал уже использован';
+      if (stickyBtn) stickyBtn.textContent = 'Триал использован';
       return;
     }
-    if (!res.ok) throw new Error('Ошибка активации');
+    if (!res.ok) {
+      var errData = await res.json().catch(function() { return {}; });
+      throw new Error(errData.error || 'Ошибка активации');
+    }
     var data = await res.json();
     trialSubUrl = data.subscription_url;
     document.getElementById('trial-sub-url').textContent = trialSubUrl;
@@ -534,9 +536,14 @@ async function activateTrial() {
     showPage('trial');
     hideStickyTrialCta();
   } catch (e) {
-    toast(e.message || 'Ошибка', true);
+    var msg = e.message || '';
+    if (msg.match(/load failed|network|fetch|abort/i)) {
+      toast('Сервер временно недоступен. Попробуйте позже или через бот @ShadowHorizon_bot', true);
+    } else {
+      toast(msg || 'Ошибка активации', true);
+    }
     btn.disabled = false;
-    btn.textContent = '7 дней бесплатно';
+    btn.textContent = '7 дней бесплатно \u2014 5 устройств';
     if (stickyBtn) stickyBtn.textContent = '7 дней бесплатно';
   }
 }
