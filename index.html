@@ -720,7 +720,10 @@ function renderTariffCards() {
   var container = document.getElementById('tariffs');
   while (container.firstChild) container.removeChild(container.firstChild);
 
-  config.tariffs.forEach(function(t, i) {
+  // Render Lite first (right), then NetCloak (left) — reversed display order
+  var displayOrder = config.tariffs.length === 2 ? [1, 0] : config.tariffs.map(function(_,i){return i});
+  displayOrder.forEach(function(i) {
+    var t = config.tariffs[i];
     var card = document.createElement('div');
     card.className = 'tariff' + (i === selectedTariff ? ' selected' : '');
     card.setAttribute('data-i', i);
