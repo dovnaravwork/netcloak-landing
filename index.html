@@ -88,20 +88,29 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
 /* Section titles */
 .section-title{font-size:17px;font-weight:600;color:#fff;margin:28px 0 14px;text-align:center;letter-spacing:-.2px}
 
-/* Tariffs */
-.tariffs{display:flex;flex-direction:column;gap:10px}
-.tariff{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .3s;position:relative}
+/* Period switcher */
+.period-switcher{display:flex;background:var(--card);border-radius:10px;padding:3px;gap:2px;margin-bottom:14px}
+.period-sw{flex:1;text-align:center;padding:10px 4px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all .2s;position:relative}
+.period-sw.active{background:rgba(6,182,212,.12);color:#fff;border:1px solid rgba(6,182,212,.3)}
+.period-sw .sw-save{display:block;font-size:9px;color:var(--green);font-weight:700;margin-top:2px}
+
+/* Tariffs — 2 columns */
+.tariffs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tariff{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;cursor:pointer;transition:all .3s;position:relative;text-align:center}
 .tariff.selected{border-color:var(--accent);box-shadow:0 0 24px rgba(59,130,246,.1)}
-.tariff-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.tariff-name{font-size:16px;font-weight:600;color:#fff}
-.tariff-devices{font-size:12px;color:var(--muted)}
-.periods{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
-.period{background:var(--card);border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;border:1px solid var(--border);transition:all .3s;font-size:12px;position:relative}
-.period.selected{border-color:var(--cyan);background:rgba(6,182,212,.08);box-shadow:0 0 12px rgba(6,182,212,.1)}
-.period-days{font-weight:600;color:#fff;font-size:13px}
-.period-price{color:var(--cyan);font-size:13px;font-weight:600;margin-top:2px}
-.period-monthly{color:var(--muted);font-size:10px;margin-top:1px}
-.badge-best{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--cyan),var(--accent));color:#fff;font-size:9px;font-weight:700;padding:2px 10px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 8px rgba(6,182,212,.3)}
+.tariff-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.tariff-devices{font-size:11px;color:var(--muted);margin-bottom:10px;display:block}
+.tariff-price-wrap{margin:8px 0}
+.tariff-old-price{font-size:13px;color:var(--muted);text-decoration:line-through;margin-bottom:2px}
+.tariff-current-price{font-size:24px;font-weight:800;color:var(--cyan)}
+.tariff-per-month{font-size:11px;color:var(--muted);margin-top:2px}
+.tariff-save{display:inline-block;font-size:10px;font-weight:700;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:6px;padding:2px 8px;margin-top:6px}
+
+/* Trust block */
+.trust-block{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
+.trust-item{text-align:center;padding:12px 8px;background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:10px}
+.trust-value{font-size:18px;font-weight:800;color:var(--cyan);margin-bottom:2px}
+.trust-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 
 /* Delivery */
 .contact-section{margin:20px 0}
@@ -238,10 +247,26 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
     <div id="features" class="features"></div>
     <div class="speed-badge">Подключение за 2 минуты — без технических знаний</div>
 
-    <!-- NO-LOGS -->
+    <!-- TRUST BLOCK -->
+    <div class="trust-block">
+      <div class="trust-item">
+        <div class="trust-value">99.9%</div>
+        <div class="trust-label">Uptime</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-value">2</div>
+        <div class="trust-label">Сервера EU</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-value">0</div>
+        <div class="trust-label">Логов</div>
+      </div>
+    </div>
+
+    <!-- NO-LOGS + JURISDICTION -->
     <div class="nologs">
-      <div class="nologs-title">Не храним логи</div>
-      <div class="nologs-text">Мы не знаем, какие сайты вы посещаете. Шифрование военного уровня. Серверы в Европе.</div>
+      <div class="nologs-title">Прозрачность и приватность</div>
+      <div class="nologs-text">Серверы в Нидерландах (вне юрисдикции РФ и Five Eyes). Zero-log policy — логирование отключено на уровне сервера. Современные протоколы шифрования, неотличимые от обычного HTTPS-трафика.</div>
     </div>
 
     <div id="loading" class="loading">Загрузка тарифов...</div>
@@ -250,6 +275,7 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
     <div id="shop-content" class="hidden">
       <div class="caustic-divider"></div>
       <p class="section-title" id="tariffs-anchor">Выберите тариф</p>
+      <div id="period-switcher" class="period-switcher"></div>
       <div id="tariffs" class="tariffs"></div>
 
       <div class="contact-section">
@@ -300,6 +326,14 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q">Можно ли вернуть деньги?</div>
         <div class="faq-a"><div class="faq-a-inner">Да, в течение 7 дней после оплаты. Напишите в поддержку @netcloak_support_bot — вернём без вопросов.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Какой протокол используется?</div>
+        <div class="faq-a"><div class="faq-a-inner">VLESS + XHTTP поверх TLS — один из самых устойчивых к анализу трафика протоколов на 2026 год. Для вашего провайдера соединение выглядит как обычное посещение сайта по HTTPS. Два сервера с автопереключением для стабильности.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Чем NetCloak отличается от других?</div>
+        <div class="faq-a"><div class="faq-a-inner">Не нужно настраивать свой сервер (как Outline/Amnezia self-hosted). Дешевле коммерческих сервисов (от 50 руб/мес vs 150-370 руб). Работает когда другие блокируют — протоколы обновляются под текущие методы фильтрации. Оплата из РФ без проблем.</div></div>
       </div>
     </div>
   </div>
@@ -601,60 +635,113 @@ function renderFeatures() {
   });
 }
 
-function renderTariffs() {
+function renderPeriodSwitcher() {
+  var sw = document.getElementById('period-switcher');
+  while (sw.firstChild) sw.removeChild(sw.firstChild);
+  // Use first tariff's periods as reference
+  var periods = config.tariffs[0].periods;
+  periods.forEach(function(p, j) {
+    var btn = document.createElement('div');
+    btn.className = 'period-sw' + (j === selectedPeriod ? ' active' : '');
+    btn.setAttribute('data-p', j);
+    btn.onclick = function() { switchPeriod(j); };
+    var label = p.days <= 7 ? p.days+'дн' : p.days <= 30 ? '1 мес' : p.days <= 90 ? '3 мес' : p.days <= 180 ? '6 мес' : '1 год';
+    btn.textContent = label;
+    // Show savings on longer plans
+    if (p.days > 30) {
+      var monthlyPrice = Math.round(p.price_kopeks / (p.days / 30) / 100);
+      var baseMonthly = Math.round(periods[0].price_kopeks / (periods[0].days / 30) / 100);
+      var savePercent = Math.round((1 - monthlyPrice / baseMonthly) * 100);
+      if (savePercent > 0) {
+        var saveSpan = document.createElement('span');
+        saveSpan.className = 'sw-save';
+        saveSpan.textContent = '-' + savePercent + '%';
+        btn.appendChild(saveSpan);
+      }
+    }
+    sw.appendChild(btn);
+  });
+}
+
+function switchPeriod(pi) {
+  selectedPeriod = pi;
+  // Update switcher
+  document.querySelectorAll('.period-sw').forEach(function(el) {
+    el.classList.toggle('active', +el.dataset.p === pi);
+  });
+  // Re-render tariff cards with new period prices
+  renderTariffCards();
+  updateTotal();
+}
+
+function renderTariffCards() {
   var container = document.getElementById('tariffs');
   while (container.firstChild) container.removeChild(container.firstChild);
+
   config.tariffs.forEach(function(t, i) {
-    var tariffDiv = document.createElement('div');
-    tariffDiv.className = 'tariff';
-    tariffDiv.setAttribute('data-i', i);
-    tariffDiv.onclick = function() { selectTariff(i); };
-    var header = document.createElement('div');
-    header.className = 'tariff-header';
-    var nameSpan = document.createElement('span');
-    nameSpan.className = 'tariff-name';
-    nameSpan.textContent = t.name;
-    var devicesSpan = document.createElement('span');
-    devicesSpan.className = 'tariff-devices';
-    devicesSpan.textContent = t.device_limit + ' устр. \u00b7 безлимит';
-    header.appendChild(nameSpan);
-    header.appendChild(devicesSpan);
-    tariffDiv.appendChild(header);
-    var periodsDiv = document.createElement('div');
-    periodsDiv.className = 'periods';
-    t.periods.forEach(function(p, j) {
-      var periodDiv = document.createElement('div');
-      periodDiv.className = 'period';
-      periodDiv.setAttribute('data-t', i);
-      periodDiv.setAttribute('data-p', j);
-      periodDiv.onclick = function(e) { e.stopPropagation(); selectPeriod(i, j); };
-      var isBest = p.days > 180;
-      if (isBest) {
-        var badge = document.createElement('span');
-        badge.className = 'badge-best';
-        badge.textContent = 'Выгодно';
-        periodDiv.appendChild(badge);
+    var card = document.createElement('div');
+    card.className = 'tariff' + (i === selectedTariff ? ' selected' : '');
+    card.setAttribute('data-i', i);
+    card.onclick = function() { selectTariff(i); };
+
+    var name = document.createElement('div');
+    name.className = 'tariff-name';
+    name.textContent = t.name;
+    card.appendChild(name);
+
+    var devices = document.createElement('div');
+    devices.className = 'tariff-devices';
+    devices.textContent = t.device_limit + ' устр. \u00b7 безлимит';
+    card.appendChild(devices);
+
+    var priceWrap = document.createElement('div');
+    priceWrap.className = 'tariff-price-wrap';
+
+    var p = t.periods[selectedPeriod];
+    var baseP = t.periods[0]; // monthly price as base
+
+    // Strikethrough price for plans > 1 month
+    if (p.days > 30) {
+      var fullPrice = Math.round(baseP.price_kopeks * (p.days / baseP.days) / 100);
+      var oldPrice = document.createElement('div');
+      oldPrice.className = 'tariff-old-price';
+      oldPrice.textContent = fullPrice + ' \u20bd';
+      priceWrap.appendChild(oldPrice);
+    }
+
+    var currentPrice = document.createElement('div');
+    currentPrice.className = 'tariff-current-price';
+    currentPrice.textContent = p.price_label;
+    priceWrap.appendChild(currentPrice);
+
+    if (p.days >= 60) {
+      var perMonth = document.createElement('div');
+      perMonth.className = 'tariff-per-month';
+      perMonth.textContent = Math.round(p.price_kopeks / (p.days / 30) / 100) + ' \u20bd/мес';
+      priceWrap.appendChild(perMonth);
+    }
+
+    // Save badge
+    if (p.days > 30) {
+      var monthlyNow = p.price_kopeks / (p.days / 30);
+      var monthlyBase = baseP.price_kopeks / (baseP.days / 30);
+      var savePercent = Math.round((1 - monthlyNow / monthlyBase) * 100);
+      if (savePercent > 0) {
+        var saveBadge = document.createElement('div');
+        saveBadge.className = 'tariff-save';
+        saveBadge.textContent = 'Экономия ' + savePercent + '%';
+        priceWrap.appendChild(saveBadge);
       }
-      var daysDiv = document.createElement('div');
-      daysDiv.className = 'period-days';
-      var label = p.days <= 7 ? p.days+'дн' : p.days <= 30 ? '1 мес' : p.days <= 90 ? '3 мес' : p.days <= 180 ? '6 мес' : '1 год';
-      daysDiv.textContent = label;
-      periodDiv.appendChild(daysDiv);
-      var priceDiv = document.createElement('div');
-      priceDiv.className = 'period-price';
-      priceDiv.textContent = p.price_label;
-      periodDiv.appendChild(priceDiv);
-      if (p.days >= 60) {
-        var moDiv = document.createElement('div');
-        moDiv.className = 'period-monthly';
-        moDiv.textContent = Math.round(p.price_kopeks / (p.days / 30) / 100) + ' \u20bd/мес';
-        periodDiv.appendChild(moDiv);
-      }
-      periodsDiv.appendChild(periodDiv);
-    });
-    tariffDiv.appendChild(periodsDiv);
-    container.appendChild(tariffDiv);
+    }
+
+    card.appendChild(priceWrap);
+    container.appendChild(card);
   });
+}
+
+function renderTariffs() {
+  renderPeriodSwitcher();
+  renderTariffCards();
 }
 
 function renderPaymentMethods() {
@@ -681,6 +768,9 @@ function renderShop() {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('shop-content').classList.remove('hidden');
   renderFeatures();
+  // Default to last period (yearly) for max LTV
+  var lastPeriodIdx = config.tariffs[0].periods.length - 1;
+  selectedPeriod = lastPeriodIdx;
   renderTariffs();
   renderPaymentMethods();
   selectTariff(0);
@@ -689,16 +779,7 @@ function renderShop() {
 
 function selectTariff(i) {
   selectedTariff = i;
-  document.querySelectorAll('.tariff').forEach(function(el, j) { el.classList.toggle('selected', j===i); });
-  selectPeriod(i, 0);
-}
-
-function selectPeriod(ti, pi) {
-  if (ti !== selectedTariff) selectTariff(ti);
-  selectedPeriod = pi;
-  document.querySelectorAll('.period').forEach(function(el) {
-    el.classList.toggle('selected', +el.dataset.t===ti && +el.dataset.p===pi);
-  });
+  document.querySelectorAll('.tariff').forEach(function(el, j) { el.classList.toggle('selected', +el.dataset.i===i); });
   updateTotal();
 }
 
