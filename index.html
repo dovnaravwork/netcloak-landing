@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 72'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='32' y1='0' x2='32' y2='72' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%231e40af'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M32 2L4 16v20c0 18 12 32 28 34 16-2 28-16 28-34V16L32 2z' fill='url(%23g)'/%3E%3Ctext x='32' y='50' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='700' fill='white'%3EN%3C/text%3E%3C/svg%3E">
 <meta name="description" content="Безопасный интернет без логов и ограничений. От 99 руб/мес. Подключение за 2 минуты.">
 <meta name="robots" content="noindex,nofollow">
-<script>window.__configPromise=(async()=>{for(let i=0;i<3;i++){try{const r=await fetch('/api/cabinet/landing/buy?lang=ru');if(r.ok)return r.json()}catch(e){}await new Promise(r=>setTimeout(r,2000))}return null})();</script>
+<script>window.__configPromise=(async()=>{for(let i=0;i<3;i++){try{const r=await fetch('https://api.netcloak.win/api/cabinet/landing/buy?lang=ru');if(r.ok)return r.json()}catch(e){}await new Promise(r=>setTimeout(r,2000))}return null})();</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -427,7 +427,7 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
 </div>
 
 <script>
-var API_BASE = '/api/cabinet/landing';
+var API_BASE = 'https://api.netcloak.win/api/cabinet/landing';
 var SLUG = 'buy';
 var config = null;
 var selectedTariff = 0;
@@ -450,7 +450,7 @@ async function activateTrial() {
     // Get ref from URL if present
     var params = new URLSearchParams(window.location.search);
     var refCode = params.get('ref') || '';
-    var url = '/site-api/trial';
+    var url = 'https://api.netcloak.win/site-api/trial';
     if (refCode) url += '?ref=' + encodeURIComponent(refCode);
 
     var res = await fetch(url, { method: 'POST' });
@@ -907,7 +907,7 @@ async function saveEmail() {
   var email = emailInput.value.trim();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = 'Введите корректный email'; status.style.color = 'var(--red)'; return; }
   btn.disabled = true; status.textContent = 'Сохраняем...'; status.style.color = 'var(--muted)';
-  if (currentToken) { try { await fetch('/internal/save-email', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: currentToken, email: email}) }); } catch(e) {} }
+  if (currentToken) { try { await fetch('https://api.netcloak.win/internal/save-email', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: currentToken, email: email}) }); } catch(e) {} }
   try {
     var subject = encodeURIComponent('NetCloak \u2014 ваш ключ');
     var body = encodeURIComponent('Ваш ключ NetCloak:\n\n' + currentSubUrl + '\n\n1. Скачайте Hiddify или Streisand\n2. Скопируйте ссылку\n3. + \u2192 Импорт из буфера\n4. Подключитесь');
