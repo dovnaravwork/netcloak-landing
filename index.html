@@ -572,11 +572,19 @@ function route() {
   if (m) {
     currentToken = m[1];
     localStorage.setItem('nc_purchase_token', currentToken);
+    localStorage.setItem('nc_purchase_ts', String(Date.now()));
     showPage('success');
     hideStickyTrialCta();
     pollPurchaseStatus(currentToken);
   } else {
     var savedToken = localStorage.getItem('nc_purchase_token');
+    var savedTs = parseInt(localStorage.getItem('nc_purchase_ts') || '0');
+    // Auto-clear stale tokens (older than 10 minutes)
+    if (savedToken && savedTs && (Date.now() - savedTs > 600000)) {
+      localStorage.removeItem('nc_purchase_token');
+      localStorage.removeItem('nc_purchase_ts');
+      savedToken = null;
+    }
     if (savedToken) {
       currentToken = savedToken;
       showPage('success');
