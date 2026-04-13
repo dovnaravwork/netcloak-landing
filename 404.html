@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NetCloak — безопасный интернет</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 72'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='32' y1='0' x2='32' y2='72' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%231e40af'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M32 2L4 16v20c0 18 12 32 28 34 16-2 28-16 28-34V16L32 2z' fill='url(%23g)'/%3E%3Ctext x='32' y='50' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='700' fill='white'%3EN%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Безопасный интернет без логов и ограничений. От 99 руб/мес. Подключение за 2 минуты.">
+<meta name="robots" content="noindex,nofollow">
+<script>
+window.__fallbackConfig={"features":[{"icon":"\ud83d\ude80","title":"\u0411\u0435\u0437 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438","description":"\u0411\u0435\u0437\u043b\u0438\u043c\u0438\u0442\u043d\u044b\u0439 \u0442\u0440\u0430\u0444\u0438\u043a"},{"icon":"\ud83d\udd10","title":"\u0411\u0435\u0437 \u043b\u043e\u0433\u043e\u0432","description":"\u041c\u044b \u043d\u0435 \u0445\u0440\u0430\u043d\u0438\u043c \u0438\u0441\u0442\u043e\u0440\u0438\u044e"},{"icon":"\ud83d\udcf1","title":"\u0412\u0441\u0435 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430","description":"Android, iOS, Windows, macOS"},{"icon":"\ud83c\udf0d","title":"\u0421\u0435\u0440\u0432\u0435\u0440\u044b \u0432 \u0415\u0432\u0440\u043e\u043f\u0435","description":"\u0421\u0442\u0430\u0431\u0438\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435"}],"tariffs":[{"id":1,"name":"NetCloak","device_limit":5,"periods":[{"days":30,"price_kopeks":17900,"price_label":"179 \u20bd"},{"days":90,"price_kopeks":39900,"price_label":"399 \u20bd"},{"days":180,"price_kopeks":64900,"price_label":"649 \u20bd"},{"days":360,"price_kopeks":99900,"price_label":"999 \u20bd"}]},{"id":2,"name":"NetCloak Lite","device_limit":1,"periods":[{"days":30,"price_kopeks":9900,"price_label":"99 \u20bd"},{"days":90,"price_kopeks":22900,"price_label":"229 \u20bd"},{"days":180,"price_kopeks":37900,"price_label":"379 \u20bd"},{"days":360,"price_kopeks":59900,"price_label":"599 \u20bd"}]}],"payment_methods":[{"method_id":"yookassa","display_name":"\u041a\u0430\u0440\u0442\u0430 / \u0421\u0411\u041f"},{"method_id":"cryptobot","display_name":"\u041a\u0440\u0438\u043f\u0442\u043e\u0432\u0430\u043b\u044e\u0442\u0430 (USDT/TON)"}]};
+window.__configPromise=(async()=>{try{var c=new AbortController();var t=setTimeout(function(){c.abort()},8000);var r=await fetch('https://api.netcloak.win/api/cabinet/landing/buy?lang=ru',{signal:c.signal});clearTimeout(t);if(r.ok)return r.json()}catch(e){}return window.__fallbackConfig})();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--card:#11111b;--card2:#16162a;
+  --accent:#3b82f6;--accent2:#2563eb;--cyan:#06b6d4;
+  --green:#22c55e;--red:#ef4444;
+  --text:#d4d4d8;--muted:#6b7280;--border:#1e1e3a;--radius:14px
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.container{max-width:480px;margin:0 auto;padding:0 16px 16px;position:relative;z-index:1}
+
+/* Caustic background */
+.caustic-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.caustic-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(ellipse 600px 400px at 30% 20%,rgba(59,130,246,.07) 0%,transparent 60%),
+  radial-gradient(ellipse 500px 500px at 70% 60%,rgba(6,182,212,.05) 0%,transparent 50%),
+  radial-gradient(ellipse 400px 300px at 50% 80%,rgba(59,130,246,.04) 0%,transparent 50%);
+  animation:caustic-drift 20s ease-in-out infinite alternate}
+.caustic-bg::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:.4}
+@keyframes caustic-drift{0%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-2%,1%) rotate(.5deg)}100%{transform:translate(1%,-1%) rotate(-.3deg)}}
+
+/* Film grain */
+.grain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='turbulence' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")}
+
+/* Hero */
+.hero{text-align:center;padding:48px 0 20px;position:relative}
+.caustic-mesh{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;
+  background:radial-gradient(circle 200px at 35% 45%,rgba(6,182,212,.08) 0%,transparent 70%),
+  radial-gradient(circle 150px at 65% 35%,rgba(59,130,246,.06) 0%,transparent 60%);
+  animation:caustic-pulse 12s ease-in-out infinite alternate;mix-blend-mode:screen}
+@keyframes caustic-pulse{0%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}100%{opacity:.7;transform:scale(.98)}}
+.logo-wrap{position:relative;display:inline-block;margin-bottom:16px}
+.logo-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(59,130,246,.2) 0%,rgba(6,182,212,.08) 40%,transparent 70%);
+  animation:logo-breathe 4s ease-in-out infinite;pointer-events:none}
+@keyframes logo-breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}50%{transform:translate(-50%,-50%) scale(1.15);opacity:1}}
+h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-1px}
+.subtitle{color:#fff;font-size:18px;font-weight:500;line-height:1.5;margin-bottom:6px}
+.subtitle-secondary{color:var(--muted);font-size:14px;margin-bottom:20px;letter-spacing:.2px}
+
+/* Trial CTA */
+.trial-cta{
+  display:block;width:100%;border:none;border-radius:var(--radius);padding:18px;
+  font-size:18px;font-weight:700;cursor:pointer;transition:all .3s;
+  background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;
+  box-shadow:0 4px 24px rgba(34,197,94,.2);position:relative;overflow:hidden;margin-bottom:8px}
+.trial-cta:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(34,197,94,.3)}
+.trial-cta:active{transform:translateY(0)}
+.trial-cta:disabled{background:#1a2e1a;color:#3a5a3a;cursor:not-allowed;transform:none;box-shadow:none}
+.trial-hint{color:var(--text);font-size:13px;margin-bottom:8px;font-weight:500}
+
+/* Buy link under trial */
+.buy-link{color:var(--cyan);font-size:15px;cursor:pointer;text-decoration:none;transition:color .2s;font-weight:500}
+.buy-link:hover{color:var(--accent)}
+
+/* Caustic divider */
+.caustic-divider{height:1px;margin:40px 0;background:linear-gradient(90deg,transparent,rgba(6,182,212,.3),rgba(59,130,246,.2),transparent)}
+
+/* Features */
+.features{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feature{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:18px 14px;text-align:center;transition:border-color .3s}
+.feature:hover{border-color:rgba(6,182,212,.3)}
+.feature-icon{font-size:28px;margin-bottom:8px}
+.feature-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px}
+.feature-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.speed-badge{text-align:center;margin-top:14px;font-size:13px;font-weight:500;color:var(--cyan);
+  background:linear-gradient(135deg,rgba(6,182,212,.06),rgba(59,130,246,.04));border:1px solid rgba(6,182,212,.15);border-radius:10px;padding:12px}
+
+/* Section spacing */
+.section-gap{margin-top:48px}
+
+/* Section titles */
+.section-title{font-size:17px;font-weight:600;color:#fff;margin:40px 0 14px;text-align:center;letter-spacing:-.2px}
+
+/* Period switcher */
+.period-switcher{display:flex;background:var(--card);border-radius:10px;padding:3px;gap:2px;margin-bottom:14px}
+.period-sw{flex:1;text-align:center;padding:10px 4px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all .2s;position:relative}
+.period-sw.active{background:rgba(6,182,212,.12);color:#fff;border:1px solid rgba(6,182,212,.3)}
+.period-sw .sw-save{display:block;font-size:9px;color:var(--green);font-weight:700;margin-top:2px}
+
+/* Tariffs — 2 columns */
+.tariffs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tariff{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;cursor:pointer;transition:all .3s;position:relative;text-align:center}
+.tariff.selected{border-color:var(--accent);box-shadow:0 0 24px rgba(59,130,246,.1)}
+.tariff-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.tariff-devices{font-size:11px;color:var(--muted);margin-bottom:10px;display:block}
+.tariff-price-wrap{margin:8px 0}
+.tariff-old-price{font-size:13px;color:var(--muted);text-decoration:line-through;margin-bottom:2px}
+.tariff-current-price{font-size:24px;font-weight:800;color:var(--cyan)}
+.tariff-per-month{font-size:11px;color:var(--muted);margin-top:2px}
+.tariff-save{display:inline-block;font-size:10px;font-weight:700;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:6px;padding:2px 8px;margin-top:6px}
+
+/* Trust block */
+.trust-block{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:32px 0}
+.trust-item{text-align:center;padding:14px 8px;background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:10px}
+.trust-value{font-size:18px;font-weight:800;color:var(--cyan);margin-bottom:2px}
+.trust-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.trust-sublabel{font-size:9px;color:#555;margin-top:2px}
+
+/* Privacy points */
+.privacy-points{display:flex;flex-direction:column;gap:10px;margin:24px 0;padding:16px;background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius)}
+.privacy-point{display:flex;align-items:flex-start;gap:10px}
+.privacy-icon{font-size:20px;flex-shrink:0;line-height:1.4}
+.privacy-title{font-size:13px;font-weight:600;color:#fff}
+.privacy-desc{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* Tariff badge */
+.tariff-badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--cyan),var(--accent));color:#fff;font-size:9px;font-weight:700;padding:2px 10px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 8px rgba(6,182,212,.3)}
+
+/* Delivery hint */
+.delivery-hint{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* Stars link */
+.stars-link{display:block;text-align:center;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;text-decoration:none;transition:border-color .2s;margin-top:8px}
+.stars-link:hover{border-color:rgba(6,182,212,.3)}
+
+/* Delivery */
+.contact-section{margin:20px 0}
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.delivery-options{display:flex;gap:8px;margin-top:8px}
+.delivery-opt{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;font-size:13px;font-weight:500;transition:all .3s;color:var(--text)}
+.delivery-opt.selected{border-color:var(--cyan);background:rgba(6,182,212,.06);color:#fff}
+.contact-input{width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:16px;outline:none;transition:all .3s}
+.contact-input:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(6,182,212,.1)}
+.contact-input::placeholder{color:#3a3a50}
+
+/* Payment */
+.payment-methods{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.pm{background:var(--card);border-radius:10px;padding:14px 16px;cursor:pointer;border:1px solid var(--border);transition:all .3s;display:flex;align-items:center;gap:12px}
+.pm.selected{border-color:var(--accent);background:rgba(59,130,246,.05)}
+.pm-name{font-size:14px;font-weight:500}
+
+/* Total & CTA */
+.total{text-align:center;font-size:22px;font-weight:700;color:#fff;margin:24px 0 4px}
+.total span{color:var(--cyan)}
+.guarantee{text-align:center;font-size:12px;color:var(--muted);margin-bottom:8px}
+.btn{display:block;width:100%;border:none;border-radius:var(--radius);padding:16px;font-size:17px;font-weight:600;cursor:pointer;transition:all .3s;margin:14px 0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.15)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(59,130,246,.25)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{background:#1a1a2e;color:#3a3a50;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-secondary{background:var(--card2);border:1px solid var(--border);margin:8px 0;font-size:14px;padding:12px;box-shadow:none}
+.btn-secondary:hover{background:var(--card);border-color:rgba(6,182,212,.2);transform:none;box-shadow:none}
+
+/* FAQ */
+.faq{margin:8px 0 20px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:14px 0;cursor:pointer;font-size:14px;font-weight:500;color:#fff;-webkit-tap-highlight-color:transparent}
+.faq-q::after{content:'+';font-size:18px;color:var(--muted);transition:transform .2s;flex-shrink:0;margin-left:12px}
+.faq-item.open .faq-q::after{transform:rotate(45deg);color:var(--cyan)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:13px;color:var(--muted);line-height:1.6}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a-inner{padding:0 0 14px}
+
+/* Sticky CTA (mobile) */
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:12px 16px;
+  background:linear-gradient(to top,var(--bg) 60%,transparent);display:none}
+.sticky-cta button{display:block;width:100%;max-width:480px;margin:0 auto;border:none;border-radius:var(--radius);padding:16px;
+  font-size:16px;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;
+  box-shadow:0 -2px 20px rgba(34,197,94,.2)}
+@media(max-width:600px){.sticky-cta{display:block}body{padding-bottom:72px}}
+
+/* Footer */
+.footer{text-align:center;padding:24px 0 8px;color:var(--muted);font-size:12px;line-height:1.8;border-top:1px solid var(--border);margin-top:32px;position:relative}
+.footer::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.2),transparent)}
+.footer a{color:var(--cyan);text-decoration:none;transition:color .2s}
+.footer a:hover{color:var(--accent)}
+.footer-legal{margin-top:8px;font-size:11px;color:#444}
+.footer-legal a{color:#555}
+
+/* Utils */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:12px 24px;border-radius:10px;font-size:13px;z-index:10000;display:none;max-width:90%;text-align:center}
+.toast.success{background:var(--green)}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+.hidden{display:none}
+
+/* Success page */
+.success-card{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:28px 20px;margin:20px 0;text-align:center;position:relative;overflow:hidden}
+.success-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 0%,rgba(6,182,212,.06) 0%,transparent 60%);pointer-events:none}
+.success-icon{font-size:48px;margin-bottom:12px}
+.success-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+.success-subtitle{font-size:14px;color:var(--muted);margin-bottom:20px}
+.sub-url-box{background:var(--bg);border-radius:10px;padding:14px;margin:16px 0;word-break:break-all;font-family:'SF Mono',Consolas,monospace;font-size:11px;color:var(--muted);text-align:left;max-height:80px;overflow:auto;border:1px solid var(--border)}
+.steps{text-align:left;margin:16px 0}
+.steps li{margin:8px 0;font-size:14px;line-height:1.5}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.status-pending{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
+.status-delivered{background:rgba(110,231,183,.08);color:#6ee7b7;border:1px solid rgba(110,231,183,.2)}
+.status-waiting{background:rgba(165,180,252,.08);color:#a5b4fc;border:1px solid rgba(165,180,252,.2)}
+.poll-spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--muted);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.apps-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.apps-links a{color:var(--cyan);text-decoration:none;font-size:13px;padding:6px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px;transition:all .2s}
+.apps-links a:hover{border-color:var(--cyan)}
+.bot-promo{margin-top:20px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);text-align:center}
+.bot-promo a{display:inline-block;background:var(--accent);color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;margin-top:8px}
+
+/* OS Tabs */
+.os-tabs{display:flex;gap:4px;margin:16px 0 12px;background:var(--card);border-radius:10px;padding:3px}
+.os-tab{flex:1;text-align:center;padding:10px 4px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);transition:all .2s}
+.os-tab.active{background:rgba(6,182,212,.12);color:#fff}
+.os-content{display:none}
+.os-content.active{display:block}
+.os-step{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-size:13px;line-height:1.5}
+.os-step-num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(6,182,212,.15);color:var(--cyan);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.os-step-text{color:var(--text)}
+.os-step-text a{color:var(--cyan);text-decoration:none}
+.os-step-text b{color:#fff}
+.check-link{display:inline-block;margin-top:12px;font-size:12px;color:var(--cyan);text-decoration:none;padding:6px 14px;border:1px solid rgba(6,182,212,.2);border-radius:8px}
+
+/* Key block */
+.key-block{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
+.key-preview{font-family:'SF Mono',Consolas,monospace;font-size:11px;color:var(--muted);word-break:break-all;max-height:44px;overflow:hidden;margin-bottom:12px}
+.key-actions{display:flex;gap:8px}
+.key-actions .btn{flex:1;margin:0;font-size:14px;padding:12px}
+
+/* Status pill */
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:12px}
+.status-pill.active{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.status-pill.pending{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
+.status-pill.error{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.status-dot.pulse{animation:dot-pulse 1.5s infinite}
+@keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Expiry */
+.expiry-text{font-size:13px;color:var(--muted);margin-bottom:16px}
+
+/* Trust footer */
+.trust-footer{display:flex;flex-direction:column;gap:6px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.trust-footer-item{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.trust-footer-item span{color:#555}
+</style>
+</head>
+<body>
+
+<div class="caustic-bg"></div>
+<div class="grain"></div>
+
+<div class="container">
+  <div id="toast" class="toast"></div>
+
+  <!-- PAGE: Shop -->
+  <div id="page-shop">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="caustic-mesh"></div>
+      <div class="logo-wrap">
+        <div class="logo-glow"></div>
+        <svg width="60" height="72" viewBox="0 0 56 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shield" x1="28" y1="0" x2="28" y2="68" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3b82f6"/><stop offset="1" stop-color="#1e40af"/>
+            </linearGradient>
+            <filter id="glow"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#3b82f6" flood-opacity=".5"/></filter>
+            <filter id="caustic-glow"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#06b6d4" flood-opacity=".3"/></filter>
+          </defs>
+          <path d="M28 3L3 15v17c0 8.5 3.5 16.5 9.5 22.5S25 64 28 65c3-1 9.5-3 15.5-9S53 41.5 53 32V15L28 3z" fill="url(#shield)" filter="url(#glow)"/>
+          <path d="M28 3L3 15v17c0 8.5 3.5 16.5 9.5 22.5S25 64 28 65V3z" fill="rgba(255,255,255,.06)"/>
+          <circle cx="28" cy="30" r="7" fill="none" stroke="rgba(6,182,212,.8)" stroke-width="2" filter="url(#caustic-glow)"/>
+          <rect x="25.5" y="35" width="5" height="8" rx="1.5" fill="rgba(255,255,255,.9)"/>
+          <path d="M22 37h12v7a3 3 0 01-3 3H25a3 3 0 01-3-3v-7z" fill="rgba(255,255,255,.85)"/>
+          <circle cx="28" cy="41" r="1.5" fill="#1e40af"/>
+        </svg>
+      </div>
+      <h1>NetCloak</h1>
+      <p class="subtitle">YouTube, Instagram, ChatGPT — без ограничений</p>
+      <p class="subtitle-secondary">Шифрование трафика. Без логов. Работает в РФ.</p>
+
+      <!-- TRIAL CTA -->
+      <button class="trial-cta" id="btn-trial" onclick="activateTrial()">7 дней бесплатно — 5 устройств</button>
+      <p class="trial-hint">Без карты &middot; без регистрации &middot; отмена не нужна</p>
+
+      <p style="margin-top:14px"><a class="buy-link" onclick="scrollToTariffs()">Сразу купить подписку &darr;</a></p>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="caustic-divider"></div>
+    <div id="features" class="features"></div>
+    <div class="speed-badge">Подключение за 2 минуты — в пару кликов</div>
+
+    <!-- TRUST BLOCK -->
+    <div class="trust-block">
+      <div class="trust-item">
+        <div class="trust-value">99.9%</div>
+        <div class="trust-label">Uptime</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-value">EU</div>
+        <div class="trust-label">Серверы</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-value">0</div>
+        <div class="trust-label">Логов</div>
+        <div class="trust-sublabel">zero-log policy</div>
+      </div>
+    </div>
+
+    <!-- PRIVACY POINTS -->
+    <div class="privacy-points">
+      <div class="privacy-point">
+        <div class="privacy-icon">&#x1F1F3;&#x1F1F1;</div>
+        <div><div class="privacy-title">Нидерланды, вне Five Eyes</div><div class="privacy-desc">Серверы за пределами юрисдикции РФ и альянса Five Eyes</div></div>
+      </div>
+      <div class="privacy-point">
+        <div class="privacy-icon">&#x1F512;</div>
+        <div><div class="privacy-title">Zero-log policy</div><div class="privacy-desc">Логирование отключено на уровне сервера — технически не можем видеть ваш трафик</div></div>
+      </div>
+      <div class="privacy-point">
+        <div class="privacy-icon">&#x1F6E1;</div>
+        <div><div class="privacy-title">VLESS + XHTTP</div><div class="privacy-desc">Трафик неотличим от обычного HTTPS — не обнаруживается системами анализа</div></div>
+      </div>
+    </div>
+
+    <div id="loading" class="loading">Загрузка тарифов...</div>
+
+    <!-- TARIFFS + DELIVERY + PAYMENT -->
+    <div id="shop-content" class="hidden">
+      <div class="caustic-divider"></div>
+      <p class="section-title" id="tariffs-anchor">Выберите тариф</p>
+      <div id="period-switcher" class="period-switcher"></div>
+      <div id="tariffs" class="tariffs"></div>
+
+      <div class="contact-section">
+        <div class="input-group">
+          <label>Как получить ключ</label>
+          <div class="delivery-options">
+            <div class="delivery-opt selected" data-type="site" onclick="selectDelivery('site')">На сайте<div class="delivery-hint">Ключ сразу после оплаты</div></div>
+            <div class="delivery-opt" data-type="telegram" onclick="selectDelivery('telegram')">Telegram<div class="delivery-hint">Нужен диалог с @ShadowHorizon_bot</div></div>
+          </div>
+          <div id="contact-input-wrap" class="hidden" style="margin-top:10px">
+            <input type="text" id="contact-value" class="contact-input" placeholder="@username">
+          </div>
+        </div>
+      </div>
+
+      <p class="section-title">Способ оплаты</p>
+      <div id="payment-methods" class="payment-methods"></div>
+      <a class="stars-link" href="https://t.me/ShadowHorizon_bot" target="_blank">&#x2B50; Telegram Stars — оплата в боте</a>
+
+      <div class="total">К оплате: <span id="total-price">&mdash;</span></div>
+      <p class="guarantee">Возврат в течение 7 дней, если что-то не устроит</p>
+      <button class="btn" id="btn-buy" disabled onclick="purchase()">Оплатить</button>
+    </div>
+
+    <!-- FAQ -->
+    <div class="caustic-divider"></div>
+    <p class="section-title">Частые вопросы</p>
+    <div class="faq">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Как это работает?</div>
+        <div class="faq-a"><div class="faq-a-inner">NetCloak шифрует весь ваш интернет-трафик и направляет его через защищённые серверы в Европе. Для вашего провайдера трафик выглядит как обычный HTTPS — неотличим от посещения обычных сайтов.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Вы ведёте логи?</div>
+        <div class="faq-a"><div class="faq-a-inner">Нет. Мы не храним историю посещений, IP-адреса и данные о трафике. Технически не можем — логирование отключено на уровне сервера.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">На каких устройствах работает?</div>
+        <div class="faq-a"><div class="faq-a-inner">Android (v2rayNG), iPhone/iPad (Streisand), Windows и Mac (Hiddify). Подключение занимает 2 минуты — скопируйте ключ и вставьте в приложение.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Работает ли в России?</div>
+        <div class="faq-a"><div class="faq-a-inner">Да. Мы используем современные протоколы шифрования, которые не обнаруживаются системами анализа трафика. 2 сервера с автопереключением — если один недоступен, трафик идёт через второй.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Какие способы оплаты?</div>
+        <div class="faq-a"><div class="faq-a-inner">Банковские карты и СБП (через ЮKassa), криптовалюта USDT/TON (через CryptoBot), Telegram Stars (в боте). Все способы работают из России.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Можно ли вернуть деньги?</div>
+        <div class="faq-a"><div class="faq-a-inner">Да, в течение 7 дней после оплаты. Напишите в поддержку @netcloak_support_bot — вернём без вопросов.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Какой протокол используется?</div>
+        <div class="faq-a"><div class="faq-a-inner">VLESS + XHTTP поверх TLS — один из самых устойчивых к анализу трафика протоколов на 2026 год. Для вашего провайдера соединение выглядит как обычное посещение сайта по HTTPS. Два сервера с автопереключением для стабильности.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Чем NetCloak отличается от других?</div>
+        <div class="faq-a"><div class="faq-a-inner">Не нужно настраивать свой сервер (как Outline/Amnezia self-hosted). Цена от 50&#x20bd;/мес — в 3&#x2013;7 раз дешевле коммерческих при том же уровне защиты. Работает когда другие блокируют — протоколы обновляются под текущие методы фильтрации. Оплата из РФ без проблем.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Trial Success -->
+  <div id="page-trial" class="hidden">
+    <div class="success-card">
+      <div class="status-pill active"><div class="status-dot"></div>Триал активирован</div>
+      <div class="success-title">Ваш NetCloak готов к работе</div>
+      <div class="expiry-text">7 дней &middot; 5 устройств &middot; безлимит</div>
+
+      <div id="trial-result">
+        <div class="key-block">
+          <canvas id="trial-qr" style="display:block;margin:0 auto 12px;border-radius:10px;background:#fff;padding:6px" width="180" height="180"></canvas>
+          <div class="key-preview" id="trial-sub-url"></div>
+          <div class="key-actions">
+            <button class="btn" onclick="copyTrialUrl()" id="btn-copy-trial">Скопировать ключ</button>
+            <a class="btn btn-secondary" href="https://t.me/ShadowHorizon_bot" target="_blank" style="text-align:center;text-decoration:none">Открыть в Telegram</a>
+          </div>
+        </div>
+
+        <div id="trial-onboarding"></div>
+
+        <div class="trust-footer">
+          <div class="trust-footer-item"><span>&#x1F512;</span> Нет журналов активности</div>
+          <div class="trust-footer-item"><span>&#x1F30D;</span> Юрисдикция за пределами РФ</div>
+          <div class="trust-footer-item"><span>&#x21A9;</span> Возврат в течение 7 дней — через поддержку</div>
+        </div>
+
+        <div class="bot-promo">
+          <p style="font-size:14px;color:#fff">Продление и поддержка — в боте</p>
+          <a href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
+        </div>
+        <button class="btn btn-secondary" style="margin-top:12px" onclick="goToShop()">Купить подписку</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Success / Status -->
+  <div id="page-success" class="hidden">
+    <div class="success-card">
+      <!-- Pending state -->
+      <div id="success-pending">
+        <div class="status-pill pending" id="status-pill"><div class="status-dot pulse"></div><span id="status-pill-text">Ожидание оплаты</span></div>
+        <div class="success-title" id="success-title">Обработка платежа</div>
+        <div class="success-subtitle" id="success-subtitle">Завершите оплату в окне платёжной системы</div>
+      </div>
+
+      <!-- Delivered state -->
+      <div id="success-delivered" class="hidden">
+        <div class="status-pill active"><div class="status-dot"></div>Соединение активировано</div>
+        <div class="success-title" id="delivered-title">Ваш NetCloak готов к работе</div>
+        <div class="expiry-text" id="delivered-expiry"></div>
+
+        <div class="key-block" id="key-block">
+          <canvas id="qr-canvas" style="display:block;margin:0 auto 12px;border-radius:10px;background:#fff;padding:6px" width="180" height="180"></canvas>
+          <div class="key-preview" id="sub-url"></div>
+          <div class="key-actions">
+            <button class="btn" onclick="copySubUrl()" id="btn-copy-key">Скопировать ключ</button>
+            <a class="btn btn-secondary" href="https://t.me/ShadowHorizon_bot" target="_blank" style="text-align:center;text-decoration:none">Открыть в Telegram</a>
+          </div>
+        </div>
+
+        <div id="success-onboarding"></div>
+
+        <div id="email-backup" style="margin:16px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+          <p style="font-size:13px;color:#fff;margin-bottom:4px">Оставьте email — отправим ключ и напомним о продлении</p>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:8px">Без спама. Только ключ и напоминание за 3 дня.</p>
+          <div style="display:flex;gap:8px">
+            <input type="email" id="backup-email" class="contact-input" placeholder="email@example.com" style="flex:1;padding:12px">
+            <button class="btn" style="width:auto;margin:0;padding:12px 20px;font-size:14px" id="btn-save-email" onclick="saveEmail()">&#x2192;</button>
+          </div>
+          <p id="email-status" style="font-size:11px;color:var(--muted);margin-top:4px"></p>
+        </div>
+
+        <div class="trust-footer">
+          <div class="trust-footer-item"><span>&#x1F512;</span> Нет журналов активности</div>
+          <div class="trust-footer-item"><span>&#x1F30D;</span> Юрисдикция за пределами РФ</div>
+          <div class="trust-footer-item"><span>&#x21A9;</span> Возврат в течение 7 дней — через поддержку</div>
+        </div>
+      </div>
+
+      <!-- Sent to telegram -->
+      <div id="sub-pending" class="hidden" style="margin-top:16px">
+        <p style="font-size:14px;color:var(--green)"></p>
+      </div>
+
+      <!-- Error state -->
+      <div id="success-error" class="hidden">
+        <div class="status-pill error"><div class="status-dot"></div>Ошибка</div>
+        <div class="success-title">Платёж не прошёл</div>
+        <div class="success-subtitle">Попробуйте ещё раз или обратитесь в поддержку</div>
+      </div>
+
+      <!-- Activation needed -->
+      <div id="success-activate" class="hidden"></div>
+
+      <div class="bot-promo">
+        <p style="font-size:14px;color:#fff">Продление и поддержка — в боте</p>
+        <a href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
+      </div>
+      <button class="btn btn-secondary" style="margin-top:12px" onclick="goToShop()">Купить ещё</button>
+    </div>
+  </div>
+
+  <!-- PAGE: Privacy -->
+  <div id="page-privacy" class="hidden">
+    <div class="success-card" style="text-align:left">
+      <a style="display:inline-block;margin-bottom:16px;font-size:14px;color:var(--cyan);cursor:pointer" onclick="showPage('shop')">&larr; Вернуться на главную</a>
+      <h1 style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px">Политика конфиденциальности</h1>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:24px">Последнее обновление: 13 апреля 2026</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">1. Какие данные мы собираем</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:8px">Мы собираем минимум данных, необходимый для работы сервиса:</p>
+      <ul style="padding-left:20px;font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">
+        <li><b>Telegram ID</b> — для идентификации подписки и доставки ключа</li>
+        <li><b>Email</b> — только если вы добровольно указали его для резервной копии ключа</li>
+        <li><b>Данные оплаты</b> — обрабатываются платёжными провайдерами (ЮKassa, CryptoBot), мы не храним данные карт</li>
+      </ul>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">2. Какие данные мы НЕ собираем</h2>
+      <ul style="padding-left:20px;font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">
+        <li>Историю посещённых сайтов</li>
+        <li>Содержимое трафика</li>
+        <li>IP-адреса подключений</li>
+        <li>Временные метки сессий</li>
+        <li>Объём переданных данных по пользователям</li>
+      </ul>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">Логирование трафика отключено на уровне сервера. Мы технически не имеем возможности видеть, какие ресурсы вы посещаете.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">3. Как мы используем данные</h2>
+      <ul style="padding-left:20px;font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">
+        <li>Telegram ID — для управления подпиской, отправки уведомлений, доставки ключа</li>
+        <li>Email — для отправки резервной копии ключа (если указан)</li>
+      </ul>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">4. Хранение данных</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">Данные хранятся на серверах в Нидерландах, за пределами юрисдикции РФ и альянса Five Eyes. База данных зашифрована, доступ ограничен.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">5. Передача данных третьим лицам</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">Мы не передаём, не продаём и не предоставляем ваши данные третьим лицам, за исключением платёжных провайдеров (ЮKassa, CryptoBot) для обработки оплаты.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">6. Удаление данных</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">Запросите полное удаление через <a href="https://t.me/netcloak_support_bot" style="color:var(--cyan)">@netcloak_support_bot</a>. Данные удаляются в течение 72 часов.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">7. Файлы cookie</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">Сайт не использует cookie. Для хранения состояния оплаты используется localStorage, который не передаётся на сервер.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">8. Контакты</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa">По вопросам конфиденциальности: <a href="https://t.me/netcloak_support_bot" style="color:var(--cyan)">@netcloak_support_bot</a></p>
+    </div>
+  </div>
+
+  <!-- PAGE: Terms -->
+  <div id="page-terms" class="hidden">
+    <div class="success-card" style="text-align:left">
+      <a style="display:inline-block;margin-bottom:16px;font-size:14px;color:var(--cyan);cursor:pointer" onclick="showPage('shop')">&larr; Вернуться на главную</a>
+      <h1 style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px">Условия использования</h1>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:24px">Последнее обновление: 13 апреля 2026</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">1. Описание сервиса</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">NetCloak — сервис шифрования интернет-трафика и защиты соединения. Сервис предоставляет ключ подключения для настройки защищённого соединения на устройствах пользователя.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">2. Подписка и оплата</h2>
+      <ul style="padding-left:20px;font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">
+        <li>Доступны тарифы с оплатой на 1, 3, 6 и 12 месяцев</li>
+        <li>Оплата через ЮKassa (карты, СБП), CryptoBot (крипта) и Telegram Stars</li>
+        <li>Подписка не продлевается автоматически</li>
+        <li>Для продления — новая подписка через бот или сайт</li>
+      </ul>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">3. Пробный период</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">7 дней, 5 устройств, один раз. Без привязки карты или регистрации.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">4. Возврат средств</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">Возврат в течение 7 дней с момента оплаты через <a href="https://t.me/netcloak_support_bot" style="color:var(--cyan)">@netcloak_support_bot</a>. Возврат тем же способом оплаты.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">5. Допустимое использование</h2>
+      <ul style="padding-left:20px;font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">
+        <li>Не использовать для незаконной деятельности</li>
+        <li>Не передавать ключ за пределами оплаченного количества устройств</li>
+        <li>Не пытаться нарушить работу серверов</li>
+      </ul>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">6. Ограничение ответственности</h2>
+      <ul style="padding-left:20px;font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">
+        <li>Сервис предоставляется «как есть»</li>
+        <li>Цель — uptime 99.9%, без гарантии</li>
+        <li>При недоступности более 72 часов — продление подписки</li>
+      </ul>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">7. Прекращение доступа</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">При нарушении условий доступ прекращается с возвратом неиспользованной части.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">8. Изменение условий</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px">Актуальная версия — на этой странице. При существенных изменениях уведомим через бот.</p>
+      <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 8px">9. Контакты</h2>
+      <p style="font-size:14px;line-height:1.7;color:#a1a1aa">Поддержка: <a href="https://t.me/netcloak_support_bot" style="color:var(--cyan)">@netcloak_support_bot</a></p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <a href="https://t.me/N3tC10ak">Канал</a> &middot;
+    <a href="https://t.me/ShadowHorizon_bot">Бот</a> &middot;
+    <a href="https://t.me/netcloak_support_bot">Поддержка</a>
+    <div class="footer-legal">
+      NetCloak &copy; 2025&ndash;2026<br>
+      <a href="#" onclick="showPage('page-privacy');return false">Политика конфиденциальности</a> &middot;
+      <a href="#" onclick="showPage('page-terms');return false">Условия использования</a>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY CTA (mobile) -->
+<div class="sticky-cta" id="sticky-cta">
+  <button onclick="activateTrial()" id="sticky-trial-btn">7 дней бесплатно</button>
+</div>
+
+<script>
+var API_BASE = 'https://api.netcloak.win/api/cabinet/landing';
+var SLUG = 'buy';
+var config = null;
+var selectedTariff = 0;
+var selectedPeriod = 0;
+var selectedPayment = 0;
+var currentSubUrl = '';
+var pollTimer = null;
+var currentToken = '';
+var trialSubUrl = '';
+
+// ===== TRIAL =====
+async function activateTrial() {
+  var btn = document.getElementById('btn-trial');
+  var stickyBtn = document.getElementById('sticky-trial-btn');
+  btn.disabled = true;
+  btn.textContent = 'Активируем...';
+  if (stickyBtn) stickyBtn.textContent = 'Активируем...';
+
+  try {
+    // Get ref from URL if present
+    var params = new URLSearchParams(window.location.search);
+    var refCode = params.get('ref') || '';
+    var url = 'https://api.netcloak.win/site-api/trial';
+    if (refCode) url += '?ref=' + encodeURIComponent(refCode);
+
+    var res = await fetch(url, { method: 'POST' });
+    if (res.status === 429) {
+      toast('Триал уже активирован с вашего IP. Получите триал через бот @ShadowHorizon_bot', true);
+      btn.textContent = 'Триал уже использован';
+      if (stickyBtn) stickyBtn.textContent = 'Триал использован';
+      return;
+    }
+    if (!res.ok) {
+      var errData = await res.json().catch(function() { return {}; });
+      throw new Error(errData.error || 'Ошибка активации');
+    }
+    var data = await res.json();
+    trialSubUrl = data.subscription_url;
+    var trialUrlEl = document.getElementById('trial-sub-url');
+    trialUrlEl.textContent = trialSubUrl.length > 60 ? trialSubUrl.substring(0, 60) + '...' : trialSubUrl;
+    trialUrlEl.setAttribute('data-full', trialSubUrl);
+    generateQR(trialSubUrl, document.getElementById('trial-qr'), 180);
+    renderOnboarding('trial-onboarding');
+    if (!navigator.share) {
+      var shareBtn = document.getElementById('btn-share-trial');
+      if (shareBtn) shareBtn.style.display = 'none';
+    }
+    showPage('trial');
+    hideStickyTrialCta();
+  } catch (e) {
+    var msg = e.message || '';
+    if (msg.match(/load failed|network|fetch|abort/i)) {
+      toast('Сервер временно недоступен. Попробуйте позже или через бот @ShadowHorizon_bot', true);
+    } else {
+      toast(msg || 'Ошибка активации', true);
+    }
+    btn.disabled = false;
+    btn.textContent = '7 дней бесплатно \u2014 5 устройств';
+    if (stickyBtn) stickyBtn.textContent = '7 дней бесплатно';
+  }
+}
+
+function copyTrialUrl() {
+  if (!trialSubUrl) return;
+  var btn = document.getElementById('btn-copy-trial');
+  navigator.clipboard.writeText(trialSubUrl).then(function() {
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
+  }).catch(function() {
+    var ta = document.createElement('textarea'); ta.value = trialSubUrl;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
+  });
+}
+
+function shareTrialUrl() {
+  if (!trialSubUrl) return;
+  if (navigator.share) {
+    navigator.share({ title: 'NetCloak \u2014 ключ подключения', text: trialSubUrl }).catch(function() {});
+  } else {
+    copyTrialUrl();
+  }
+}
+
+// ===== STICKY CTA =====
+function hideStickyTrialCta() {
+  var s = document.getElementById('sticky-cta');
+  if (s) s.style.display = 'none';
+}
+
+// Hide sticky when scrolled to tariffs
+var stickyHidden = false;
+window.addEventListener('scroll', function() {
+  if (stickyHidden) return;
+  var anchor = document.getElementById('tariffs-anchor');
+  if (anchor && anchor.getBoundingClientRect().top < window.innerHeight) {
+    // Don't hide - user might still want trial
+  }
+}, {passive: true});
+
+// ===== FAQ =====
+function toggleFaq(item) {
+  item.classList.toggle('open');
+}
+
+// ===== ROUTING =====
+function scrollToTariffs() {
+  var el = document.getElementById('tariffs-anchor');
+  if (el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function route() {
+  var path = window.location.pathname;
+  var m = path.match(/\/buy\/success\/(.+)/);
+  if (m) {
+    currentToken = m[1];
+    localStorage.setItem('nc_purchase_token', currentToken);
+    localStorage.setItem('nc_purchase_ts', String(Date.now()));
+    showPage('success');
+    hideStickyTrialCta();
+    pollPurchaseStatus(currentToken);
+  } else {
+    var savedToken = localStorage.getItem('nc_purchase_token');
+    var savedTs = parseInt(localStorage.getItem('nc_purchase_ts') || '0');
+    // Auto-clear stale tokens: no timestamp = legacy token, or older than 10 minutes
+    if (savedToken && (!savedTs || Date.now() - savedTs > 600000)) {
+      localStorage.removeItem('nc_purchase_token');
+      localStorage.removeItem('nc_purchase_ts');
+      savedToken = null;
+    }
+    if (savedToken) {
+      currentToken = savedToken;
+      showPage('success');
+      hideStickyTrialCta();
+      pollPurchaseStatus(savedToken);
+    } else {
+      showPage('shop');
+      init();
+    }
+  }
+}
+
+function showPage(name) {
+  var target = name.indexOf('page-') === 0 ? name : 'page-' + name;
+  ['page-shop','page-success','page-trial','page-privacy','page-terms'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', id !== target);
+  });
+  window.scrollTo(0, 0);
+}
+
+async function init() {
+  // URL routing for legal pages
+  var path = location.pathname.replace(/\/+$/, '');
+  if (path === '/privacy') { showPage('privacy'); return; }
+  if (path === '/terms') { showPage('terms'); return; }
+
+  try {
+    config = await window.__configPromise;
+    if (!config) throw new Error('no data');
+    renderShop();
+  } catch (e) {
+    document.getElementById('loading').style.display = 'none';
+    toast('Не удалось загрузить тарифы. Обновите страницу.', true);
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ===== OS ONBOARDING TABS =====
+var osData = [
+  {id:'android', label:'Android', app:'Hiddify', url:'https://play.google.com/store/apps/details?id=app.hiddify.com',
+   steps:['<a href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank">Установите Hiddify</a> из Google Play','Нажмите <b>Скопировать ключ</b> выше','В Hiddify нажмите <b>+</b> затем <b>Вставить из буфера</b>','Нажмите <b>Connect</b> — соединение установлено']},
+  {id:'iphone', label:'iPhone', app:'Streisand', url:'https://apps.apple.com/app/streisand/id6450534064',
+   steps:['<a href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">Установите Streisand</a> из App Store','Нажмите <b>Скопировать ключ</b> выше','В Streisand нажмите <b>+</b> затем <b>Вставить из буфера</b>','Нажмите <b>Connect</b> — соединение установлено']},
+  {id:'windows', label:'Windows', app:'v2rayN', url:'https://github.com/2dust/v2rayN/releases/latest',
+   steps:['<a href="https://github.com/2dust/v2rayN/releases/latest" target="_blank">Скачайте v2rayN</a> с GitHub','Нажмите <b>Скопировать ключ</b> выше','В v2rayN: <b>Servers → Add server from clipboard</b>','Правой кнопкой на сервер → <b>Set as active → Start</b>']},
+  {id:'mac', label:'Mac', app:'Hiddify', url:'https://github.com/hiddify/hiddify-app/releases/latest',
+   steps:['<a href="https://github.com/hiddify/hiddify-app/releases/latest" target="_blank">Скачайте Hiddify</a> для macOS','Нажмите <b>Скопировать ключ</b> выше','В Hiddify нажмите <b>+</b> затем <b>Вставить из буфера</b>','Нажмите <b>Connect</b> — соединение установлено']}
+];
+
+function renderOnboarding(containerId) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  container.textContent = '';
+
+  var title = document.createElement('p');
+  title.style.cssText = 'font-weight:600;color:#fff;margin:16px 0 8px;font-size:15px';
+  title.textContent = 'Как подключиться';
+  container.appendChild(title);
+
+  var tabs = document.createElement('div');
+  tabs.className = 'os-tabs';
+  osData.forEach(function(os, i) {
+    var tab = document.createElement('div');
+    tab.className = 'os-tab' + (i === 0 ? ' active' : '');
+    tab.textContent = os.label;
+    tab.onclick = function() { switchOsTab(containerId, i); };
+    tab.setAttribute('data-os', i);
+    tabs.appendChild(tab);
+  });
+  container.appendChild(tabs);
+
+  osData.forEach(function(os, i) {
+    var content = document.createElement('div');
+    content.className = 'os-content' + (i === 0 ? ' active' : '');
+    content.setAttribute('data-os-content', i);
+
+    os.steps.forEach(function(step, j) {
+      var row = document.createElement('div');
+      row.className = 'os-step';
+      var num = document.createElement('div');
+      num.className = 'os-step-num';
+      num.textContent = j + 1;
+      var text = document.createElement('div');
+      text.className = 'os-step-text';
+      text.innerHTML = step;
+      row.appendChild(num);
+      row.appendChild(text);
+      content.appendChild(row);
+    });
+
+    var check = document.createElement('a');
+    check.className = 'check-link';
+    check.href = 'https://2ip.ru';
+    check.target = '_blank';
+    check.textContent = 'Проверить соединение \u2192';
+    content.appendChild(check);
+
+    container.appendChild(content);
+  });
+}
+
+function switchOsTab(containerId, idx) {
+  var container = document.getElementById(containerId);
+  container.querySelectorAll('.os-tab').forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  container.querySelectorAll('.os-content').forEach(function(c, i) { c.classList.toggle('active', i === idx); });
+}
+
+// Override feature descriptions for better messaging
+var featureOverrides = {
+  'Серверы в Европе': 'Нидерланды, вне юрисдикции РФ',
+  'Servers in Europe': 'Netherlands, outside RF jurisdiction',
+  'Без логов': 'Логирование отключено на уровне сервера',
+  'No logs': 'Logging disabled at server level'
+};
+
+function renderFeatures() {
+  var container = document.getElementById('features');
+  while (container.firstChild) container.removeChild(container.firstChild);
+  config.features.forEach(function(f) {
+    var div = document.createElement('div');
+    div.className = 'feature';
+    var iconDiv = document.createElement('div');
+    iconDiv.className = 'feature-icon';
+    iconDiv.textContent = f.icon;
+    var titleDiv = document.createElement('div');
+    titleDiv.className = 'feature-title';
+    titleDiv.textContent = f.title;
+    var descDiv = document.createElement('div');
+    descDiv.className = 'feature-desc';
+    descDiv.textContent = featureOverrides[f.title] || f.description;
+    div.appendChild(iconDiv);
+    div.appendChild(titleDiv);
+    div.appendChild(descDiv);
+    container.appendChild(div);
+  });
+}
+
+function renderPeriodSwitcher() {
+  var sw = document.getElementById('period-switcher');
+  while (sw.firstChild) sw.removeChild(sw.firstChild);
+  // Use first tariff's periods as reference
+  var periods = config.tariffs[0].periods;
+  periods.forEach(function(p, j) {
+    var btn = document.createElement('div');
+    btn.className = 'period-sw' + (j === selectedPeriod ? ' active' : '');
+    btn.setAttribute('data-p', j);
+    btn.onclick = function() { switchPeriod(j); };
+    var label = p.days <= 7 ? p.days+'дн' : p.days <= 30 ? '1 мес' : p.days <= 90 ? '3 мес' : p.days <= 180 ? '6 мес' : '1 год';
+    btn.textContent = label;
+    // Show savings on longer plans
+    if (p.days > 30) {
+      var monthlyPrice = Math.round(p.price_kopeks / (p.days / 30) / 100);
+      var baseMonthly = Math.round(periods[0].price_kopeks / (periods[0].days / 30) / 100);
+      var savePercent = Math.round((1 - monthlyPrice / baseMonthly) * 100);
+      if (savePercent > 0) {
+        var saveSpan = document.createElement('span');
+        saveSpan.className = 'sw-save';
+        saveSpan.textContent = '-' + savePercent + '%';
+        btn.appendChild(saveSpan);
+      }
+    }
+    sw.appendChild(btn);
+  });
+}
+
+function switchPeriod(pi) {
+  selectedPeriod = pi;
+  // Update switcher
+  document.querySelectorAll('.period-sw').forEach(function(el) {
+    el.classList.toggle('active', +el.dataset.p === pi);
+  });
+  // Re-render tariff cards with new period prices
+  renderTariffCards();
+  updateTotal();
+}
+
+function renderTariffCards() {
+  var container = document.getElementById('tariffs');
+  while (container.firstChild) container.removeChild(container.firstChild);
+
+  // Render Lite first (right), then NetCloak (left) — reversed display order
+  var displayOrder = config.tariffs.length === 2 ? [1, 0] : config.tariffs.map(function(_,i){return i});
+  displayOrder.forEach(function(i) {
+    var t = config.tariffs[i];
+    var card = document.createElement('div');
+    card.className = 'tariff' + (i === selectedTariff ? ' selected' : '');
+    card.setAttribute('data-i', i);
+    card.onclick = function() { selectTariff(i); };
+
+    // "Popular" badge on first tariff (NetCloak, more devices)
+    if (i === 0) {
+      var popBadge = document.createElement('div');
+      popBadge.className = 'tariff-badge';
+      popBadge.textContent = 'Популярный';
+      card.appendChild(popBadge);
+    }
+
+    var name = document.createElement('div');
+    name.className = 'tariff-name';
+    name.textContent = t.name;
+    card.appendChild(name);
+
+    var devices = document.createElement('div');
+    devices.className = 'tariff-devices';
+    devices.textContent = t.device_limit + ' устр. \u00b7 безлимит';
+    card.appendChild(devices);
+
+    var priceWrap = document.createElement('div');
+    priceWrap.className = 'tariff-price-wrap';
+
+    var p = t.periods[selectedPeriod];
+    var baseP = t.periods[0]; // monthly price as base
+
+    // Strikethrough price for plans > 1 month
+    if (p.days > 30) {
+      var fullPrice = Math.round(baseP.price_kopeks * (p.days / baseP.days) / 100);
+      var oldPrice = document.createElement('div');
+      oldPrice.className = 'tariff-old-price';
+      oldPrice.textContent = fullPrice + ' \u20bd';
+      priceWrap.appendChild(oldPrice);
+    }
+
+    var currentPrice = document.createElement('div');
+    currentPrice.className = 'tariff-current-price';
+    currentPrice.textContent = p.price_label;
+    priceWrap.appendChild(currentPrice);
+
+    if (p.days >= 60) {
+      var perMonth = document.createElement('div');
+      perMonth.className = 'tariff-per-month';
+      perMonth.textContent = Math.round(p.price_kopeks / (p.days / 30) / 100) + ' \u20bd/мес';
+      priceWrap.appendChild(perMonth);
+    }
+
+    // Save badge
+    if (p.days > 30) {
+      var monthlyNow = p.price_kopeks / (p.days / 30);
+      var monthlyBase = baseP.price_kopeks / (baseP.days / 30);
+      var savePercent = Math.round((1 - monthlyNow / monthlyBase) * 100);
+      if (savePercent > 0) {
+        var saveBadge = document.createElement('div');
+        saveBadge.className = 'tariff-save';
+        saveBadge.textContent = 'Экономия ' + savePercent + '%';
+        priceWrap.appendChild(saveBadge);
+      }
+    }
+
+    card.appendChild(priceWrap);
+    container.appendChild(card);
+  });
+}
+
+function renderTariffs() {
+  renderPeriodSwitcher();
+  renderTariffCards();
+}
+
+function renderPaymentMethods() {
+  var container = document.getElementById('payment-methods');
+  while (container.firstChild) container.removeChild(container.firstChild);
+  var icons = {'yookassa':'\uD83D\uDCB3','cryptobot':'\uD83D\uDC8E','telegram_stars':'\u2B50'};
+  config.payment_methods.forEach(function(m, i) {
+    var div = document.createElement('div');
+    div.className = 'pm';
+    div.setAttribute('data-i', i);
+    div.onclick = function() { selectPayment(i); };
+    var iconSpan = document.createElement('span');
+    iconSpan.textContent = icons[m.method_id] || '\uD83D\uDCB0';
+    var nameSpan = document.createElement('span');
+    nameSpan.className = 'pm-name';
+    nameSpan.textContent = m.display_name;
+    div.appendChild(iconSpan);
+    div.appendChild(nameSpan);
+    container.appendChild(div);
+  });
+}
+
+function renderShop() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('shop-content').classList.remove('hidden');
+  renderFeatures();
+  // Default to last period (yearly) for max LTV
+  var lastPeriodIdx = config.tariffs[0].periods.length - 1;
+  selectedPeriod = lastPeriodIdx;
+  renderTariffs();
+  renderPaymentMethods();
+  selectTariff(0);
+  if (config.payment_methods.length > 0) selectPayment(0);
+}
+
+function selectTariff(i) {
+  selectedTariff = i;
+  document.querySelectorAll('.tariff').forEach(function(el, j) { el.classList.toggle('selected', +el.dataset.i===i); });
+  updateTotal();
+}
+
+function selectPayment(i) {
+  selectedPayment = i;
+  document.querySelectorAll('.pm').forEach(function(el, j) { el.classList.toggle('selected', j===i); });
+  updateTotal();
+}
+
+function updateTotal() {
+  var p = config.tariffs[selectedTariff].periods[selectedPeriod];
+  document.getElementById('total-price').textContent = p.price_label;
+  document.getElementById('btn-buy').disabled = false;
+}
+
+var deliveryType = 'site';
+
+function selectDelivery(type) {
+  deliveryType = type;
+  document.querySelectorAll('.delivery-opt').forEach(function(el) { el.classList.toggle('selected', el.dataset.type === type); });
+  var wrap = document.getElementById('contact-input-wrap');
+  var inp = document.getElementById('contact-value');
+  if (type === 'site') {
+    wrap.classList.add('hidden');
+    inp.value = '';
+  } else {
+    wrap.classList.remove('hidden');
+    inp.placeholder = type === 'telegram' ? '@username' : 'email@example.com';
+    inp.type = type === 'email' ? 'email' : 'text';
+    inp.value = '';
+  }
+}
+
+async function purchase() {
+  var contactType, contactValue;
+  if (deliveryType === 'site') {
+    contactType = 'email';
+    contactValue = 'site-' + Math.random().toString(36).slice(2, 10) + '@netcloak.win';
+  } else {
+    contactType = deliveryType;
+    contactValue = document.getElementById('contact-value').value.trim();
+    if (!contactValue) { toast(contactType === 'telegram' ? 'Введите @username' : 'Введите email', true); return; }
+    if (contactType === 'telegram') {
+      if (!contactValue.startsWith('@')) contactValue = '@' + contactValue;
+      if (!/^@[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(contactValue)) { toast('Некорректный username. Пример: @username', true); return; }
+    }
+    if (contactType === 'email') {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactValue)) { toast('Некорректный email', true); return; }
+    }
+  }
+  var tariff = config.tariffs[selectedTariff];
+  var period = tariff.periods[selectedPeriod];
+  var pm = config.payment_methods[selectedPayment];
+  var btn = document.getElementById('btn-buy');
+  btn.disabled = true;
+  btn.textContent = 'Создаём платёж...';
+  try {
+    var res = await fetch(API_BASE + '/' + SLUG + '/purchase', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ tariff_id: tariff.id, period_days: period.days, contact_type: contactType, contact_value: contactValue, payment_method: pm.method_id })
+    });
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      var msg = Array.isArray(err.detail) ? (err.detail[0] && err.detail[0].msg) || 'Ошибка' : err.detail || 'Ошибка создания платежа';
+      throw new Error(msg);
+    }
+    var data = await res.json();
+    localStorage.setItem('nc_purchase_token', data.purchase_token);
+    try { window.location.assign(data.payment_url); } catch(e) { window.open(data.payment_url, '_self'); }
+  } catch (e) {
+    toast(e.message || String(e), true);
+    btn.disabled = false;
+    btn.textContent = 'Оплатить';
+  }
+}
+
+async function pollPurchaseStatus(token) {
+  currentToken = token;
+  var attempts = 0;
+  var maxAttempts = 60;
+  async function check() {
+    try {
+      var res = await fetch(API_BASE + '/purchase/' + token);
+      if (res.status === 404) { localStorage.removeItem('nc_purchase_token'); goToShop(); return; }
+      if (!res.ok) { updateSuccessUI('error', null); return; }
+      var data = await res.json();
+      updateSuccessUI(data.status, data);
+      if (data.status === 'delivered' || data.status === 'pending_activation') return;
+      attempts++;
+      if (attempts < maxAttempts) pollTimer = setTimeout(check, 3000);
+    } catch (e) {
+      attempts++;
+      if (attempts < maxAttempts) pollTimer = setTimeout(check, 5000);
+    }
+  }
+  check();
+}
+
+function hideAllSuccessStates() {
+  ['success-pending','success-delivered','success-error','success-activate','sub-pending'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+}
+
+function updateSuccessUI(status, data) {
+  hideAllSuccessStates();
+
+  switch (status) {
+    case 'pending_payment':
+      document.getElementById('success-pending').classList.remove('hidden');
+      document.getElementById('status-pill-text').textContent = 'Ожидание оплаты';
+      document.getElementById('success-title').textContent = 'Обработка платежа';
+      document.getElementById('success-subtitle').textContent = 'Завершите оплату в окне платёжной системы';
+      break;
+
+    case 'paid': case 'processing':
+      document.getElementById('success-pending').classList.remove('hidden');
+      document.getElementById('status-pill-text').textContent = 'Платёж получен';
+      document.getElementById('success-title').textContent = 'Создаём подписку';
+      document.getElementById('success-subtitle').textContent = 'Это займёт несколько секунд...';
+      break;
+
+    case 'delivered':
+      document.getElementById('success-delivered').classList.remove('hidden');
+      var titleEl = document.getElementById('delivered-title');
+      var expiryEl = document.getElementById('delivered-expiry');
+      titleEl.textContent = 'Ваш NetCloak готов к работе';
+      if (data.period_days) {
+        var expDate = new Date();
+        expDate.setDate(expDate.getDate() + data.period_days);
+        var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+        expiryEl.textContent = (data.tariff_name || 'Подписка') + ' \u00b7 до ' + expDate.getDate() + ' ' + months[expDate.getMonth()] + ' ' + expDate.getFullYear();
+      } else {
+        expiryEl.textContent = data.tariff_name || 'Ваш ключ готов';
+      }
+
+      if (data.subscription_url) {
+        currentSubUrl = data.subscription_url;
+        var urlEl = document.getElementById('sub-url');
+        urlEl.textContent = data.subscription_url.length > 60 ? data.subscription_url.substring(0, 60) + '...' : data.subscription_url;
+        urlEl.setAttribute('data-full', data.subscription_url);
+        generateQR(data.subscription_url, document.getElementById('qr-canvas'), 180);
+        renderOnboarding('success-onboarding');
+      } else {
+        document.getElementById('key-block').classList.add('hidden');
+        var pendEl = document.getElementById('sub-pending');
+        pendEl.classList.remove('hidden');
+        var p1 = document.createElement('p');
+        p1.style.cssText = 'font-size:14px;color:var(--green)';
+        p1.textContent = '\u2705 Ключ отправлен на ' + (data.contact_value || 'указанный контакт');
+        pendEl.textContent = '';
+        pendEl.appendChild(p1);
+      }
+      break;
+
+    case 'pending_activation':
+      document.getElementById('success-delivered').classList.remove('hidden');
+      document.getElementById('delivered-title').textContent = 'Оплата прошла!';
+      document.getElementById('delivered-expiry').textContent = 'У вас уже есть активная подписка';
+      if (data.subscription_url) {
+        currentSubUrl = data.subscription_url;
+        document.getElementById('sub-url').textContent = data.subscription_url.length > 60 ? data.subscription_url.substring(0, 60) + '...' : data.subscription_url;
+        document.getElementById('sub-url').setAttribute('data-full', data.subscription_url);
+        generateQR(data.subscription_url, document.getElementById('qr-canvas'), 180);
+        renderOnboarding('success-onboarding');
+      } else {
+        document.getElementById('key-block').classList.add('hidden');
+        var actWrap = document.getElementById('success-activate');
+        actWrap.classList.remove('hidden');
+        actWrap.textContent = '';
+        var actBtn = document.createElement('button');
+        actBtn.className = 'btn'; actBtn.id = 'btn-activate'; actBtn.onclick = activatePurchase;
+        actBtn.textContent = 'Активировать новую подписку';
+        var actP = document.createElement('p');
+        actP.style.cssText = 'font-size:12px;color:var(--muted);margin-top:8px';
+        actP.textContent = 'Текущая подписка будет заменена на новую';
+        actWrap.appendChild(actBtn);
+        actWrap.appendChild(actP);
+      }
+      break;
+
+    case 'failed': case 'error':
+      document.getElementById('success-error').classList.remove('hidden');
+      break;
+
+    default:
+      document.getElementById('success-pending').classList.remove('hidden');
+      document.getElementById('status-pill-text').textContent = 'Обработка';
+      document.getElementById('success-title').textContent = 'Обработка';
+      document.getElementById('success-subtitle').textContent = 'Статус: ' + status;
+  }
+}
+
+function copySubUrl() {
+  if (!currentSubUrl) return;
+  var btn = document.getElementById('btn-copy-key');
+  navigator.clipboard.writeText(currentSubUrl).then(function() {
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
+  }).catch(function() {
+    var ta = document.createElement('textarea'); ta.value = currentSubUrl;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    if (btn) { btn.textContent = 'Скопировано \u2713'; setTimeout(function() { btn.textContent = 'Скопировать ключ'; }, 2000); }
+    toast('Ключ скопирован!', false);
+  });
+}
+
+function generateQR(text, canvas, size) {
+  var img = new Image(); img.crossOrigin = 'anonymous';
+  img.onload = function() { canvas.width = size; canvas.height = size; var ctx = canvas.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,size,size); ctx.drawImage(img,0,0,size,size); };
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=' + size + 'x' + size + '&data=' + encodeURIComponent(text);
+}
+
+function shareKey() {
+  if (!currentSubUrl) return;
+  if (navigator.share) { navigator.share({ title: 'NetCloak', text: currentSubUrl }).catch(function(){}); } else { copySubUrl(); }
+}
+
+async function saveEmail() {
+  var emailInput = document.getElementById('backup-email');
+  var status = document.getElementById('email-status');
+  var btn = document.getElementById('btn-save-email');
+  var email = emailInput.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = 'Введите корректный email'; status.style.color = 'var(--red)'; return; }
+  btn.disabled = true; status.textContent = 'Сохраняем...'; status.style.color = 'var(--muted)';
+  if (currentToken) { try { await fetch('https://api.netcloak.win/internal/save-email', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: currentToken, email: email}) }); } catch(e) {} }
+  try {
+    var subject = encodeURIComponent('NetCloak \u2014 ваш ключ');
+    var body = encodeURIComponent('Ваш ключ NetCloak:\n\n' + currentSubUrl + '\n\n1. Скачайте Hiddify или Streisand\n2. Скопируйте ссылку\n3. + \u2192 Импорт из буфера\n4. Подключитесь');
+    window.open('mailto:' + email + '?subject=' + subject + '&body=' + body, '_blank');
+  } catch(e) {}
+  status.textContent = '\u2705 Email сохранён.'; status.style.color = 'var(--green)'; btn.textContent = '\u2713';
+}
+
+function goToShop() {
+  localStorage.removeItem('nc_purchase_token');
+  history.replaceState(null, '', '/');
+  showPage('shop');
+  var sticky = document.getElementById('sticky-cta');
+  if (sticky && window.innerWidth <= 600) sticky.style.display = 'block';
+  init();
+}
+
+function showBookmarkHint() { /* deprecated */ }
+
+async function activatePurchase() {
+  if (!currentToken) return;
+  var btn = document.getElementById('btn-activate');
+  if (btn) { btn.disabled = true; btn.textContent = 'Активируем...'; }
+  try {
+    var res = await fetch(API_BASE + '/activate/' + currentToken, { method: 'POST' });
+    if (!res.ok) { var err = await res.json().catch(function(){ return {}; }); throw new Error(Array.isArray(err.detail) ? (err.detail[0] && err.detail[0].msg) : err.detail || 'Ошибка активации'); }
+    var data = await res.json(); updateSuccessUI(data.status, data); toast('Подписка активирована!', false);
+  } catch (e) { toast(e.message || 'Ошибка активации', true); if (btn) { btn.disabled = false; btn.textContent = '\u2705 Активировать подписку'; } }
+}
+
+function toast(msg, isError) {
+  var el = document.getElementById('toast'); el.textContent = msg;
+  el.className = isError ? 'toast' : 'toast success'; el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 4000);
+}
+
+route();
+</script>
+</body>
+</html>
