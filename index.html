@@ -579,8 +579,8 @@ function route() {
   } else {
     var savedToken = localStorage.getItem('nc_purchase_token');
     var savedTs = parseInt(localStorage.getItem('nc_purchase_ts') || '0');
-    // Auto-clear stale tokens (older than 10 minutes)
-    if (savedToken && savedTs && (Date.now() - savedTs > 600000)) {
+    // Auto-clear stale tokens: no timestamp = legacy token, or older than 10 minutes
+    if (savedToken && (!savedTs || Date.now() - savedTs > 600000)) {
       localStorage.removeItem('nc_purchase_token');
       localStorage.removeItem('nc_purchase_ts');
       savedToken = null;
