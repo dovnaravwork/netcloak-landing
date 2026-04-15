@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Политика конфиденциальности — NetCloak VPN</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 72'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='32' y1='0' x2='32' y2='72' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%231e40af'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M32 2L4 16v20c0 18 12 32 28 34 16-2 28-16 28-34V16L32 2z' fill='url(%23g)'/%3E%3Ctext x='32' y='50' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='700' fill='white'%3EN%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Политика конфиденциальности NetCloak VPN. Без логов, минимум данных, серверы за пределами РФ.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--card:#11111b;--card2:#16162a;
+  --accent:#3b82f6;--accent2:#2563eb;--cyan:#06b6d4;
+  --green:#22c55e;--red:#ef4444;
+  --text:#d4d4d8;--muted:#6b7280;--border:#1e1e3a;--radius:14px
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.container{max-width:480px;margin:0 auto;padding:0 16px 16px;position:relative;z-index:1}
+
+/* Caustic background */
+.caustic-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.caustic-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(ellipse 600px 400px at 30% 20%,rgba(59,130,246,.07) 0%,transparent 60%),
+  radial-gradient(ellipse 500px 500px at 70% 60%,rgba(6,182,212,.05) 0%,transparent 50%),
+  radial-gradient(ellipse 400px 300px at 50% 80%,rgba(59,130,246,.04) 0%,transparent 50%);
+  animation:caustic-drift 20s ease-in-out infinite alternate}
+.caustic-bg::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:.4}
+@keyframes caustic-drift{0%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-2%,1%) rotate(.5deg)}100%{transform:translate(1%,-1%) rotate(-.3deg)}}
+
+/* Film grain */
+.grain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='turbulence' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);margin-bottom:32px;position:relative}
+.header::after{content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.2),transparent)}
+.header-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.header-logo svg{flex-shrink:0}
+.header-logo span{font-size:18px;font-weight:700;letter-spacing:-.5px}
+.header-back{color:var(--cyan);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.header-back:hover{color:var(--accent)}
+
+/* Content */
+.page-title{font-size:24px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-.5px}
+.page-date{font-size:12px;color:var(--muted);margin-bottom:32px}
+.section-heading{font-size:17px;font-weight:600;color:#fff;margin:28px 0 10px}
+.section-heading:first-of-type{margin-top:0}
+.content-text{font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px}
+.content-list{padding-left:20px;font-size:14px;line-height:1.7;color:#a1a1aa;margin-bottom:12px}
+.content-list li{margin-bottom:4px}
+.content-list li b{color:#fff;font-weight:600}
+.highlight-box{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:16px 0}
+.highlight-box p{font-size:13px;line-height:1.6;color:var(--text)}
+a.inline-link{color:var(--cyan);text-decoration:none;transition:color .2s}
+a.inline-link:hover{color:var(--accent)}
+
+/* Caustic divider */
+.caustic-divider{height:1px;margin:32px 0;background:linear-gradient(90deg,transparent,rgba(6,182,212,.3),rgba(59,130,246,.2),transparent)}
+
+/* Footer */
+.footer{text-align:center;padding:24px 0 8px;color:var(--muted);font-size:12px;line-height:1.8;border-top:1px solid var(--border);margin-top:32px;position:relative}
+.footer::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.2),transparent)}
+.footer a{color:var(--cyan);text-decoration:none;transition:color .2s}
+.footer a:hover{color:var(--accent)}
+.footer-legal{margin-top:8px;font-size:11px;color:#444}
+.footer-legal a{color:#555}
+</style>
+</head>
+<body>
+
+<div class="caustic-bg"></div>
+<div class="grain"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <a href="/" class="header-logo">
+      <svg width="32" height="38" viewBox="0 0 56 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="shield" x1="28" y1="0" x2="28" y2="68" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#3b82f6"/><stop offset="1" stop-color="#1e40af"/>
+          </linearGradient>
+        </defs>
+        <path d="M28 3L3 15v17c0 8.5 3.5 16.5 9.5 22.5S25 64 28 65c3-1 9.5-3 15.5-9S53 41.5 53 32V15L28 3z" fill="url(#shield)"/>
+        <circle cx="28" cy="30" r="7" fill="none" stroke="rgba(6,182,212,.8)" stroke-width="2"/>
+        <rect x="25.5" y="35" width="5" height="8" rx="1.5" fill="rgba(255,255,255,.9)"/>
+        <path d="M22 37h12v7a3 3 0 01-3 3H25a3 3 0 01-3-3v-7z" fill="rgba(255,255,255,.85)"/>
+        <circle cx="28" cy="41" r="1.5" fill="#1e40af"/>
+      </svg>
+      <span>NetCloak</span>
+    </a>
+    <a href="/" class="header-back">&larr; На главную</a>
+  </div>
+
+  <!-- CONTENT -->
+  <h1 class="page-title">Политика конфиденциальности</h1>
+  <p class="page-date">Последнее обновление: 15 апреля 2026 &middot; netcloak.win</p>
+
+  <div class="highlight-box">
+    <p>NetCloak VPN придерживается строгой политики отсутствия логов (no-logs policy). Мы не храним и не отслеживаем вашу активность в интернете.</p>
+  </div>
+
+  <h2 class="section-heading">1. Какие данные мы собираем</h2>
+  <p class="content-text">Мы собираем минимум данных, необходимых для работы сервиса:</p>
+  <ul class="content-list">
+    <li><b>Telegram ID</b> — для идентификации подписки, доставки ключа и уведомлений</li>
+    <li><b>Email</b> — только если вы добровольно указали его при покупке (для резервной доставки ключа)</li>
+    <li><b>Данные оплаты</b> — обрабатываются платёжными провайдерами (ЮKassa, CryptoBot). Мы не получаем и не храним данные банковских карт</li>
+    <li><b>IP-адрес при покупке/триале</b> — только для защиты от злоупотреблений (rate-limiting), не привязывается к аккаунту, не хранится</li>
+  </ul>
+
+  <h2 class="section-heading">2. Какие данные мы НЕ собираем (no-logs policy)</h2>
+  <p class="content-text">Логирование трафика отключено на уровне сервера. Мы технически не имеем возможности видеть или записывать:</p>
+  <ul class="content-list">
+    <li>Историю посещённых сайтов</li>
+    <li>Содержимое трафика</li>
+    <li>IP-адреса VPN-подключений</li>
+    <li>Временные метки сессий</li>
+    <li>Объём переданных данных по пользователям</li>
+    <li>DNS-запросы</li>
+  </ul>
+
+  <h2 class="section-heading">3. Как мы используем данные</h2>
+  <ul class="content-list">
+    <li><b>Telegram ID</b> — управление подпиской, отправка уведомлений, доставка ключа через бота</li>
+    <li><b>Email</b> — отправка резервной копии ключа (если указан)</li>
+    <li>Агрегированная статистика (общее число подписок, средняя нагрузка) — без привязки к конкретным пользователям</li>
+  </ul>
+
+  <h2 class="section-heading">4. Хранение данных</h2>
+  <p class="content-text">Данные хранятся на серверах в Нидерландах, за пределами юрисдикции Российской Федерации и альянса Five Eyes. База данных зашифрована, доступ строго ограничен.</p>
+  <p class="content-text">Мы не подпадаем под действие законодательства РФ о хранении данных на территории России, однако принимаем разумные меры для защиты персональных данных в соответствии с общими принципами 152-ФЗ и GDPR.</p>
+
+  <h2 class="section-heading">5. Передача данных третьим лицам</h2>
+  <p class="content-text">Мы не передаём, не продаём и не предоставляем ваши данные третьим лицам, за исключением:</p>
+  <ul class="content-list">
+    <li><b>Платёжные провайдеры</b> (ЮKassa, CryptoBot) — получают только данные, необходимые для обработки оплаты</li>
+    <li><b>Telegram Bot API</b> — для доставки сообщений через бота</li>
+  </ul>
+  <p class="content-text">Мы не размещаем рекламу и не используем трекеры аналитики на сайте.</p>
+
+  <h2 class="section-heading">6. Файлы cookie и localStorage</h2>
+  <p class="content-text">Сайт netcloak.win не использует cookie. Для хранения состояния оплаты и настроек используется localStorage браузера, который не передаётся на сервер и остаётся только на вашем устройстве.</p>
+
+  <h2 class="section-heading">7. Удаление данных</h2>
+  <p class="content-text">Вы можете запросить полное удаление всех своих данных через Telegram-бота <a href="https://t.me/ShadowHorizon_bot" class="inline-link">@ShadowHorizon_bot</a>. Данные удаляются в течение 72 часов после запроса.</p>
+  <p class="content-text">При удалении аккаунта удаляются: Telegram ID, email (если указан), история подписок, ключи подключения.</p>
+
+  <h2 class="section-heading">8. Безопасность</h2>
+  <p class="content-text">Для защиты данных мы применяем:</p>
+  <ul class="content-list">
+    <li>Шифрование базы данных и соединений</li>
+    <li>Ограниченный доступ к серверной инфраструктуре</li>
+    <li>Регулярное обновление серверного ПО</li>
+    <li>Протокол VLESS + XHTTP поверх TLS для VPN-соединений</li>
+  </ul>
+
+  <h2 class="section-heading">9. Изменение политики</h2>
+  <p class="content-text">Актуальная версия политики всегда доступна на этой странице. При существенных изменениях мы уведомим пользователей через Telegram-бота.</p>
+
+  <h2 class="section-heading">10. Контакты</h2>
+  <p class="content-text">По вопросам конфиденциальности и защиты данных: <a href="https://t.me/ShadowHorizon_bot" class="inline-link">@ShadowHorizon_bot</a></p>
+
+  <div class="caustic-divider"></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <a href="https://t.me/N3tC10ak">Канал</a> &middot;
+    <a href="https://t.me/ShadowHorizon_bot">Бот</a> &middot;
+    <a href="https://t.me/netcloak_support_bot">Поддержка</a>
+    <div class="footer-legal">
+      NetCloak &copy; 2025&ndash;2026<br>
+      <a href="/privacy.html">Политика конфиденциальности</a> &middot;
+      <a href="/terms.html">Условия использования</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
