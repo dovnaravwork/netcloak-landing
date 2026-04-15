@@ -171,13 +171,17 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
 .faq-a-inner{padding:0 0 14px}
 
 /* Sticky CTA (mobile) */
-.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:12px 16px;
-  background:linear-gradient(to top,var(--bg) 60%,transparent);display:none}
-.sticky-cta button{display:block;width:100%;max-width:480px;margin:0 auto;border:none;border-radius:var(--radius);padding:16px;
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:10px 16px 12px;
+  background:linear-gradient(to top,var(--bg) 80%,transparent);display:none}
+.sticky-cta-inner{max-width:480px;margin:0 auto;text-align:center}
+.sticky-cta .sticky-buy{display:block;width:100%;border:none;border-radius:var(--radius);padding:14px;
   font-size:16px;font-weight:700;cursor:pointer;
-  background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;
-  box-shadow:0 -2px 20px rgba(34,197,94,.2)}
-@media(max-width:600px){.sticky-cta{display:block}body{padding-bottom:72px}}
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  box-shadow:0 -2px 20px rgba(59,130,246,.3)}
+.sticky-cta .sticky-trial-link{display:inline-block;margin-top:8px;font-size:13px;color:var(--green);
+  cursor:pointer;text-decoration:none;opacity:.9}
+.sticky-cta .sticky-trial-link:hover{opacity:1;text-decoration:underline}
+@media(max-width:600px){.sticky-cta{display:block}body{padding-bottom:90px}}
 
 /* Footer */
 .footer{text-align:center;padding:24px 0 8px;color:var(--muted);font-size:12px;line-height:1.8;border-top:1px solid var(--border);margin-top:32px;position:relative}
@@ -577,7 +581,10 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
 
 <!-- STICKY CTA (mobile) -->
 <div class="sticky-cta" id="sticky-cta">
-  <button onclick="activateTrial()" id="sticky-trial-btn">7 дней бесплатно</button>
+  <div class="sticky-cta-inner">
+    <button class="sticky-buy" onclick="scrollToTariffs()">Купить от 99 ₽</button>
+    <a class="sticky-trial-link" onclick="activateTrial()" id="sticky-trial-btn">или 7 дней бесплатно</a>
+  </div>
 </div>
 
 <script>
