@@ -3,6 +3,8 @@ name: Sync Mirrors
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.github/**'
   workflow_dispatch:
 
 jobs:
@@ -24,27 +26,16 @@ jobs:
           MIRROR_NAME: ${{ matrix.mirror }}
         run: |
           set -euo pipefail
-
-          # Configure git
+          MIRROR_DIR="/tmp/${MIRROR_NAME}"
           git config --global user.email "dovnaravwork@gmail.com"
           git config --global user.name "Mirror Sync Bot"
-
-          # Clone mirror repo
-          git clone "https://x-access-token:${TOKEN}@github.com/dovnaravwork/${MIRROR_NAME}.git" /tmp/mirror
-
-          # Remove old files from mirror (except .git and CNAME)
-          find /tmp/mirror -maxdepth 1 -not -name '.git' -not -name 'CNAME' -not -name '.' -exec rm -rf {} +
-
-          # Copy all files except CNAME, .git, .github
+          git clone "https://x-access-token:${TOKEN}@github.com/dovnaravwork/${MIRROR_NAME}.git" "${MIRROR_DIR}"
+          find "${MIRROR_DIR}" -maxdepth 1 -not -name '.git' -not -name 'CNAME' -not -name '.' -not -path "${MIRROR_DIR}" -exec rm -rf {} +
           for file in *; do
-            [ "$file" = "CNAME" ] && continue
-            [ "$file" = ".git" ] && continue
-            [ "$file" = ".github" ] && continue
-            cp -r "$file" /tmp/mirror/
+            case "$file" in CNAME|.git|.github) continue ;; esac
+            cp -r "$file" "${MIRROR_DIR}/"
           done
-
-          # Commit and push if there are changes
-          cd /tmp/mirror
+          cd "${MIRROR_DIR}"
           git add -A
           if git diff --cached --quiet; then
             echo "No changes to sync for ${MIRROR_NAME}"
