@@ -1,0 +1,54 @@
+name: Sync Mirrors
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mirror:
+          - nc-mirror-1
+          - nc-mirror-2
+          - nc-mirror-3
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Sync to mirror
+        env:
+          TOKEN: ${{ secrets.MIRROR_SYNC_TOKEN }}
+          MIRROR_NAME: ${{ matrix.mirror }}
+        run: |
+          set -euo pipefail
+
+          # Configure git
+          git config --global user.email "dovnaravwork@gmail.com"
+          git config --global user.name "Mirror Sync Bot"
+
+          # Clone mirror repo
+          git clone "https://x-access-token:${TOKEN}@github.com/dovnaravwork/${MIRROR_NAME}.git" /tmp/mirror
+
+          # Remove old files from mirror (except .git and CNAME)
+          find /tmp/mirror -maxdepth 1 -not -name '.git' -not -name 'CNAME' -not -name '.' -exec rm -rf {} +
+
+          # Copy all files except CNAME, .git, .github
+          for file in *; do
+            [ "$file" = "CNAME" ] && continue
+            [ "$file" = ".git" ] && continue
+            [ "$file" = ".github" ] && continue
+            cp -r "$file" /tmp/mirror/
+          done
+
+          # Commit and push if there are changes
+          cd /tmp/mirror
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to sync for ${MIRROR_NAME}"
+          else
+            git commit -m "sync: mirror update from netcloak-landing"
+            git push
+          fi
