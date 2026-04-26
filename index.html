@@ -499,7 +499,7 @@ h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-
 
       <div class="bot-promo">
         <p style="font-size:14px;color:#fff">Продление и поддержка — в боте</p>
-        <a href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
+        <a id="btn-open-tg-promo" href="https://t.me/ShadowHorizon_bot">Открыть бот</a>
       </div>
       <button class="btn btn-secondary" style="margin-top:12px" onclick="goToShop()">Купить ещё</button>
     </div>
@@ -1239,7 +1239,7 @@ function updateSuccessUI(status, data) {
         urlEl.setAttribute('data-full', data.subscription_url);
         generateQR(data.subscription_url, document.getElementById('qr-canvas'), 180);
         renderOnboarding('success-onboarding');
-        if (currentToken) { var tgBtn = document.getElementById('btn-open-tg'); if (tgBtn) tgBtn.href = 'https://t.me/ShadowHorizon_bot?start=BUY_' + currentToken.substring(0, 59); }
+        if (currentToken) { var dl = 'https://t.me/ShadowHorizon_bot?start=BUY_' + currentToken.substring(0, 59); var tgBtn = document.getElementById('btn-open-tg'); if (tgBtn) tgBtn.href = dl; var tgBtn2 = document.getElementById('btn-open-tg-promo'); if (tgBtn2) tgBtn2.href = dl; }
       } else {
         document.getElementById('key-block').classList.add('hidden');
         var pendEl = document.getElementById('sub-pending');
