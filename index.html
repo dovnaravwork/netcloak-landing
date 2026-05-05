@@ -707,14 +707,17 @@ async function activateTrial() {
     hideStickyTrialCta();
   } catch (e) {
     var msg = e.message || '';
-    if (msg.match(/load failed|network|fetch|abort/i)) {
-      toast('Сервер временно недоступен. Попробуйте позже или через бот @ShadowHorizon_bot', true);
+    if (msg.match(/load failed|network|fetch|abort|failed to fetch/i)) {
+      toast('Сервер временно недоступен. Попробуйте через бот @ShadowHorizon_bot', true);
+      btn.textContent = 'Получить через бот →';
+      btn.onclick = function() { window.open('https://t.me/ShadowHorizon_bot?start=trial', '_blank'); };
+      if (stickyBtn) { stickyBtn.textContent = 'Через бот →'; stickyBtn.onclick = function() { window.open('https://t.me/ShadowHorizon_bot?start=trial', '_blank'); }; }
     } else {
       toast(msg || 'Ошибка активации', true);
+      btn.disabled = false;
+      btn.textContent = '7 дней бесплатно \u2014 5 устройств';
+      if (stickyBtn) stickyBtn.textContent = '7 дней бесплатно';
     }
-    btn.disabled = false;
-    btn.textContent = '7 дней бесплатно \u2014 5 устройств';
-    if (stickyBtn) stickyBtn.textContent = '7 дней бесплатно';
   }
 }
 
@@ -1344,7 +1347,7 @@ async function activatePurchase() {
 function toast(msg, isError) {
   var el = document.getElementById('toast'); el.textContent = msg;
   el.className = isError ? 'toast' : 'toast success'; el.style.display = 'block';
-  setTimeout(function() { el.style.display = 'none'; }, 4000);
+  setTimeout(function() { el.style.display = 'none'; }, isError ? 6000 : 4000);
 }
 
 route();
