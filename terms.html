@@ -64,6 +64,8 @@ a.inline-link:hover{color:var(--accent)}
 .footer::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.2),transparent)}
 .footer a{color:var(--cyan);text-decoration:none;transition:color .2s}
 .footer a:hover{color:var(--accent)}
+.footer-support{display:inline-block;margin-top:8px;padding:6px 16px;background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(6,182,212,.05));border:1px solid rgba(6,182,212,.4);border-radius:20px;color:var(--cyan)!important;font-weight:600;font-size:13px;transition:all .25s}
+.footer-support:hover{background:rgba(6,182,212,.25);border-color:var(--cyan);box-shadow:0 0 12px rgba(6,182,212,.3)}
 .footer-legal{margin-top:8px;font-size:11px;color:#444}
 .footer-legal a{color:#555}
 </style>
@@ -162,8 +164,9 @@ a.inline-link:hover{color:var(--accent)}
   <!-- FOOTER -->
   <div class="footer">
     <a href="https://t.me/N3tC10ak">Канал</a> &middot;
-    <a href="https://t.me/ShadowHorizon_bot">Бот</a> &middot;
-    <a href="https://t.me/netcloak_support_bot">Поддержка</a>
+    <a href="https://t.me/ShadowHorizon_bot">Бот</a>
+    <br>
+    <a href="https://t.me/netcloak_support_bot" class="footer-support">Поддержка</a>
     <div class="footer-legal">
       NetCloak &copy; 2025&ndash;2026<br>
       <a href="/privacy.html">Политика конфиденциальности</a> &middot;
