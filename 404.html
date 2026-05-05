@@ -630,8 +630,9 @@ async function activateTrial() {
 
     var res = await fetch(url, { method: 'POST' });
     if (res.status === 429) {
-      toast('Триал уже активирован с вашего IP. Получите триал через бот @ShadowHorizon_bot', true);
+      toast('Триал уже активирован с вашего IP', true);
       btn.textContent = 'Триал уже использован';
+      btn.disabled = true;
       if (stickyBtn) stickyBtn.textContent = 'Триал использован';
       return;
     }
@@ -640,6 +641,9 @@ async function activateTrial() {
       throw new Error(errData.error || 'Ошибка активации');
     }
     var data = await res.json();
+    if (data.already_exists) {
+      toast('Ваш триал ещё активен — показываем ключ', false);
+    }
     trialSubUrl = data.subscription_url;
     var trialUrlEl = document.getElementById('trial-sub-url');
     trialUrlEl.textContent = trialSubUrl.length > 60 ? trialSubUrl.substring(0, 60) + '...' : trialSubUrl;
@@ -655,10 +659,9 @@ async function activateTrial() {
   } catch (e) {
     var msg = e.message || '';
     if (msg.match(/load failed|network|fetch|abort|failed to fetch/i)) {
-      toast('Сервер временно недоступен. Попробуйте через бот @ShadowHorizon_bot', true);
-      btn.textContent = 'Получить через бот →';
-      btn.onclick = function() { window.open('https://t.me/ShadowHorizon_bot?start=trial', '_blank'); };
-      if (stickyBtn) { stickyBtn.textContent = 'Через бот →'; stickyBtn.onclick = function() { window.open('https://t.me/ShadowHorizon_bot?start=trial', '_blank'); }; }
+      toast('Сервер временно недоступен. Попробуйте позже', true);
+      btn.disabled = false;
+      btn.textContent = 'Попробовать снова';
     } else {
       toast(msg || 'Ошибка активации', true);
       btn.disabled = false;
